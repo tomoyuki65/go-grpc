@@ -1,0 +1,14 @@
+services:
+  grpc:
+    container_name: go-grpc
+    build:
+      context: .
+      dockerfile: ./docker/local/go/Dockerfile
+    # command: air -c .air.toml
+    command: go run main.go
+    volumes:
+      - ./src:/go/src
+    ports:
+      - "8080:8080"
+    tty: true
+    stdin_open: true
