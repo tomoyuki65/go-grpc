@@ -30,12 +30,8 @@ RUN go install github.com/envoyproxy/protoc-gen-validate@v1.2.1
 RUN go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@v1.5.1
 
 # 開発用のライブラリをインストール
-# RUN go install github.com/air-verse/air@latest
-# RUN go install honnef.co/go/tools/cmd/staticcheck@latest
-# RUN go install go.uber.org/mock/mockgen@latest
-# RUN go install github.com/swaggo/swag/cmd/swag@latest
-
-# マイグレーション用のatlasをインストール
-# RUN curl -sSf https://atlasgo.sh | sh
+RUN go install github.com/air-verse/air@latest
+RUN go install go.uber.org/mock/mockgen@latest
+RUN go install honnef.co/go/tools/cmd/staticcheck@latest
 
 EXPOSE 8080

@@ -4,11 +4,13 @@ services:
     build:
       context: .
       dockerfile: ./docker/local/go/Dockerfile
-    # command: air -c .air.toml
-    command: go run main.go
+    command: air -c .air.toml
     volumes:
       - ./src:/go/src
     ports:
       - "8080:8080"
+    environment:
+      - ENV
+      - PORT
     tty: true
     stdin_open: true

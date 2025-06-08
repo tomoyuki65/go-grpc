@@ -211,7 +211,7 @@ const file_proto_sample_sample_proto_rawDesc = "" +
 	"\amessage\x18\x01 \x01(\tR\amessage2\x99\x01\n" +
 	"\rSampleService\x123\n" +
 	"\x05Hello\x12\r.sample.Empty\x1a\x19.sample.HelloResponseBody\"\x00\x12S\n" +
-	"\fHelloAddText\x12\x1f.sample.HelloAddTextRequestBody\x1a .sample.HelloAddTextResponseBody\"\x00B\x14Z\x12internal/pb/sampleb\x06proto3"
+	"\fHelloAddText\x12\x1f.sample.HelloAddTextRequestBody\x1a .sample.HelloAddTextResponseBody\"\x00B\vZ\tpb/sampleb\x06proto3"
 
 var (
 	file_proto_sample_sample_proto_rawDescOnce sync.Once
