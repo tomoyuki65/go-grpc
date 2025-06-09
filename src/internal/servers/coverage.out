@@ -4,3 +4,4 @@ go-grpc/internal/servers/grpc/sample/sample.go:22.90,30.2 4 1
 go-grpc/internal/servers/grpc/sample/sample.go:32.122,38.2 2 1
 go-grpc/internal/servers/grpc/sample/sample.go:41.148,47.2 2 1
 go-grpc/internal/servers/grpc/sample/sample.go:50.144,56.2 2 1
+go-grpc/internal/servers/grpc/sample/sample.go:59.163,65.2 2 1

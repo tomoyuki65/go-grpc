@@ -57,11 +57,13 @@
 				
 				<option value="file0">go-grpc/internal/usecases/sample/hello_add_text_sample.go (100.0%)</option>
 				
-				<option value="file1">go-grpc/internal/usecases/sample/hello_client_stream_sample.go (100.0%)</option>
+				<option value="file1">go-grpc/internal/usecases/sample/hello_bidirectional_stream_sample.go (100.0%)</option>
 				
-				<option value="file2">go-grpc/internal/usecases/sample/hello_sample.go (100.0%)</option>
+				<option value="file2">go-grpc/internal/usecases/sample/hello_client_stream_sample.go (100.0%)</option>
 				
-				<option value="file3">go-grpc/internal/usecases/sample/hello_server_stream_sample.go (100.0%)</option>
+				<option value="file3">go-grpc/internal/usecases/sample/hello_sample.go (100.0%)</option>
+				
+				<option value="file4">go-grpc/internal/usecases/sample/hello_server_stream_sample.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -122,6 +124,58 @@ import (
         pb "go-grpc/pb/sample"
 
         "google.golang.org/grpc"
+        "google.golang.org/grpc/codes"
+        "google.golang.org/grpc/status"
+)
+
+// インターフェースの定義
+type SampleHelloBidirectionalStreamUsecase interface {
+        Exec(stream grpc.BidiStreamingServer[pb.HelloBidirectionalStreamRequestBody, pb.HelloBidirectionalStreamResponseBody]) error
+}
+
+// 構造体の定義
+type sampleHelloBidirectionalStreamUsecase struct{}
+
+// インスタンス生成用関数の定義
+func NewSampleHelloBidirectionalStreamUsecase() SampleHelloBidirectionalStreamUsecase <span class="cov8" title="1">{
+        return &amp;sampleHelloBidirectionalStreamUsecase{}
+}</span>
+
+func (u *sampleHelloBidirectionalStreamUsecase) Exec(stream grpc.BidiStreamingServer[pb.HelloBidirectionalStreamRequestBody, pb.HelloBidirectionalStreamResponseBody]) error <span class="cov8" title="1">{
+        for </span><span class="cov8" title="1">{
+                req, err := stream.Recv()
+                if errors.Is(err, io.EOF) </span><span class="cov8" title="1">{
+                        return nil
+                }</span>
+                <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
+                        return err
+                }</span>
+
+                // バリデーションチェック
+                <span class="cov8" title="1">if err := req.Validate(); err != nil </span><span class="cov8" title="1">{
+                        return status.Errorf(codes.InvalidArgument, "%s", err.Error())
+                }</span>
+
+                <span class="cov8" title="1">msg := fmt.Sprintf("Hello, %s !!", req.GetText())
+                if err := stream.Send(&amp;pb.HelloBidirectionalStreamResponseBody{Message: msg}); err != nil </span><span class="cov8" title="1">{
+                        return err
+                }</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package sample
+
+import (
+        "errors"
+        "fmt"
+        "io"
+
+        pb "go-grpc/pb/sample"
+
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/codes"
+        "google.golang.org/grpc/status"
 )
 
 // インターフェースの定義
@@ -149,12 +203,18 @@ func (u *sampleHelloClientStreamUsecase) Exec(stream grpc.ClientStreamingServer[
                 <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
                         return err
                 }</span>
+
+                // バリデーションチェック
+                <span class="cov8" title="1">if err := req.Validate(); err != nil </span><span class="cov8" title="1">{
+                        return status.Errorf(codes.InvalidArgument, "%s", err.Error())
+                }</span>
+
                 <span class="cov8" title="1">textList = append(textList, req.GetText())</span>
         }
 }
 </pre>
 		
-		<pre class="file" id="file2" style="display: none">package sample
+		<pre class="file" id="file3" style="display: none">package sample
 
 import (
         "context"
@@ -192,7 +252,7 @@ func (u *sampleHelloUsecase) Exec(ctx context.Context, in *pb.Empty) (*pb.HelloR
 }
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package sample
+		<pre class="file" id="file4" style="display: none">package sample
 
 import (
         "fmt"
@@ -201,6 +261,8 @@ import (
         pb "go-grpc/pb/sample"
 
         "google.golang.org/grpc"
+        "google.golang.org/grpc/codes"
+        "google.golang.org/grpc/status"
 )
 
 // インターフェースの定義
@@ -217,7 +279,12 @@ func NewSampleHelloServerStreamUsecase() SampleHelloServerStreamUsecase <span cl
 }</span>
 
 func (u *sampleHelloServerStreamUsecase) Exec(in *pb.HelloServerStreamRequestBody, stream grpc.ServerStreamingServer[pb.HelloServerStreamResponseBody]) error <span class="cov8" title="1">{
-        resCount := 3
+        // バリデーションチェック
+        if err := in.Validate(); err != nil </span><span class="cov8" title="1">{
+                return status.Errorf(codes.InvalidArgument, "%s", err.Error())
+        }</span>
+
+        <span class="cov8" title="1">resCount := 3
         for i := 0; i &lt; resCount; i++ </span><span class="cov8" title="1">{
                 if err := stream.Send(
                         &amp;pb.HelloServerStreamResponseBody{

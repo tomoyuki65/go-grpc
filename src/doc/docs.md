@@ -7,6 +7,8 @@
     - [Empty](#sample-Empty)
     - [HelloAddTextRequestBody](#sample-HelloAddTextRequestBody)
     - [HelloAddTextResponseBody](#sample-HelloAddTextResponseBody)
+    - [HelloBidirectionalStreamRequestBody](#sample-HelloBidirectionalStreamRequestBody)
+    - [HelloBidirectionalStreamResponseBody](#sample-HelloBidirectionalStreamResponseBody)
     - [HelloClientStreamRequestBody](#sample-HelloClientStreamRequestBody)
     - [HelloClientStreamResponseBody](#sample-HelloClientStreamResponseBody)
     - [HelloResponseBody](#sample-HelloResponseBody)
@@ -66,6 +68,36 @@ HelloAddTextメソッドのレスポンス結果
 
 
 
+<a name="sample-HelloBidirectionalStreamRequestBody"></a>
+
+### HelloBidirectionalStreamRequestBody
+HelloBidirectionalStreamメソッドのリクエストパラメータ
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| text | [string](#string) |  | テキスト |
+
+
+
+
+
+
+<a name="sample-HelloBidirectionalStreamResponseBody"></a>
+
+### HelloBidirectionalStreamResponseBody
+HelloBidirectionalStreamメソッドのレスポンス結果
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| message | [string](#string) |  | メッセージ |
+
+
+
+
+
+
 <a name="sample-HelloClientStreamRequestBody"></a>
 
 ### HelloClientStreamRequestBody
@@ -74,7 +106,7 @@ HelloClientStreamメソッドのリクエストパラメータ
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| text | [string](#string) |  | メッセージ |
+| text | [string](#string) |  | テキスト |
 
 
 
@@ -119,7 +151,7 @@ HelloServerStreamメソッドのリクエストパラメータ
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| text | [string](#string) |  | メッセージ |
+| text | [string](#string) |  | テキスト |
 
 
 
@@ -158,6 +190,7 @@ HelloServerStreamメソッドのレスポンス結果
 | HelloAddText | [HelloAddTextRequestBody](#sample-HelloAddTextRequestBody) | [HelloAddTextResponseBody](#sample-HelloAddTextResponseBody) | 「Hello {リクエストパラメータのtext}」を出力 |
 | HelloServerStream | [HelloServerStreamRequestBody](#sample-HelloServerStreamRequestBody) | [HelloServerStreamResponseBody](#sample-HelloServerStreamResponseBody) stream | サーバーストリーミング（1リクエスト-複数のレスポンス） |
 | HelloClientStream | [HelloClientStreamRequestBody](#sample-HelloClientStreamRequestBody) stream | [HelloClientStreamResponseBody](#sample-HelloClientStreamResponseBody) | クライアントストリーミング（複数のリクエスト-1レスポンス） |
+| HelloBidirectionalStream | [HelloBidirectionalStreamRequestBody](#sample-HelloBidirectionalStreamRequestBody) stream | [HelloBidirectionalStreamResponseBody](#sample-HelloBidirectionalStreamResponseBody) stream | 双方向ストリーミング（複数のリクエスト-複数のレスポンス） |
 
  
 

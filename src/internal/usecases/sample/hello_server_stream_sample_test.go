@@ -47,7 +47,26 @@ func TestSampleHelloServerStreamOK(t *testing.T) {
 	assert.Equal(t, nil, err)
 }
 
-func TestSampleHelloServerStreamErr(t *testing.T) {
+func TestSampleHelloServerStreamValidateErr(t *testing.T) {
+	// ユースケースのインスタンス化
+	sampleUsecase := NewSampleHelloServerStreamUsecase()
+
+	// パラメータの設定
+	in := &pb.HelloServerStreamRequestBody{Text: ""}
+	mockStream := &mockHelloServerStream{
+		ctx:     context.Background(),
+		sent:    []*pb.HelloServerStreamResponseBody{},
+		sendErr: nil,
+	}
+
+	// テストの実行
+	err := sampleUsecase.Exec(in, mockStream)
+
+	// 検証
+	assert.NotEqual(t, nil, err)
+}
+
+func TestSampleHelloServerStreamSendErr(t *testing.T) {
 	// ユースケースのインスタンス化
 	sampleUsecase := NewSampleHelloServerStreamUsecase()
 

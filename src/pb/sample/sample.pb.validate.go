@@ -891,3 +891,226 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = HelloClientStreamResponseBodyValidationError{}
+
+// Validate checks the field values on HelloBidirectionalStreamRequestBody with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *HelloBidirectionalStreamRequestBody) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HelloBidirectionalStreamRequestBody
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// HelloBidirectionalStreamRequestBodyMultiError, or nil if none found.
+func (m *HelloBidirectionalStreamRequestBody) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HelloBidirectionalStreamRequestBody) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetText()) < 1 {
+		err := HelloBidirectionalStreamRequestBodyValidationError{
+			field:  "Text",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return HelloBidirectionalStreamRequestBodyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HelloBidirectionalStreamRequestBodyMultiError is an error wrapping multiple
+// validation errors returned by
+// HelloBidirectionalStreamRequestBody.ValidateAll() if the designated
+// constraints aren't met.
+type HelloBidirectionalStreamRequestBodyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HelloBidirectionalStreamRequestBodyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HelloBidirectionalStreamRequestBodyMultiError) AllErrors() []error { return m }
+
+// HelloBidirectionalStreamRequestBodyValidationError is the validation error
+// returned by HelloBidirectionalStreamRequestBody.Validate if the designated
+// constraints aren't met.
+type HelloBidirectionalStreamRequestBodyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HelloBidirectionalStreamRequestBodyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HelloBidirectionalStreamRequestBodyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HelloBidirectionalStreamRequestBodyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HelloBidirectionalStreamRequestBodyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HelloBidirectionalStreamRequestBodyValidationError) ErrorName() string {
+	return "HelloBidirectionalStreamRequestBodyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HelloBidirectionalStreamRequestBodyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHelloBidirectionalStreamRequestBody.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HelloBidirectionalStreamRequestBodyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HelloBidirectionalStreamRequestBodyValidationError{}
+
+// Validate checks the field values on HelloBidirectionalStreamResponseBody
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *HelloBidirectionalStreamResponseBody) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HelloBidirectionalStreamResponseBody
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the result is a list of violation errors wrapped in
+// HelloBidirectionalStreamResponseBodyMultiError, or nil if none found.
+func (m *HelloBidirectionalStreamResponseBody) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HelloBidirectionalStreamResponseBody) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Message
+
+	if len(errors) > 0 {
+		return HelloBidirectionalStreamResponseBodyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HelloBidirectionalStreamResponseBodyMultiError is an error wrapping multiple
+// validation errors returned by
+// HelloBidirectionalStreamResponseBody.ValidateAll() if the designated
+// constraints aren't met.
+type HelloBidirectionalStreamResponseBodyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HelloBidirectionalStreamResponseBodyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HelloBidirectionalStreamResponseBodyMultiError) AllErrors() []error { return m }
+
+// HelloBidirectionalStreamResponseBodyValidationError is the validation error
+// returned by HelloBidirectionalStreamResponseBody.Validate if the designated
+// constraints aren't met.
+type HelloBidirectionalStreamResponseBodyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HelloBidirectionalStreamResponseBodyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HelloBidirectionalStreamResponseBodyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HelloBidirectionalStreamResponseBodyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HelloBidirectionalStreamResponseBodyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HelloBidirectionalStreamResponseBodyValidationError) ErrorName() string {
+	return "HelloBidirectionalStreamResponseBodyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HelloBidirectionalStreamResponseBodyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHelloBidirectionalStreamResponseBody.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HelloBidirectionalStreamResponseBodyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HelloBidirectionalStreamResponseBodyValidationError{}

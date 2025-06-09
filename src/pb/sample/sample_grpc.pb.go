@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	SampleService_Hello_FullMethodName             = "/sample.SampleService/Hello"
-	SampleService_HelloAddText_FullMethodName      = "/sample.SampleService/HelloAddText"
-	SampleService_HelloServerStream_FullMethodName = "/sample.SampleService/HelloServerStream"
-	SampleService_HelloClientStream_FullMethodName = "/sample.SampleService/HelloClientStream"
+	SampleService_Hello_FullMethodName                    = "/sample.SampleService/Hello"
+	SampleService_HelloAddText_FullMethodName             = "/sample.SampleService/HelloAddText"
+	SampleService_HelloServerStream_FullMethodName        = "/sample.SampleService/HelloServerStream"
+	SampleService_HelloClientStream_FullMethodName        = "/sample.SampleService/HelloClientStream"
+	SampleService_HelloBidirectionalStream_FullMethodName = "/sample.SampleService/HelloBidirectionalStream"
 )
 
 // SampleServiceClient is the client API for SampleService service.
@@ -39,6 +40,8 @@ type SampleServiceClient interface {
 	HelloServerStream(ctx context.Context, in *HelloServerStreamRequestBody, opts ...grpc.CallOption) (grpc.ServerStreamingClient[HelloServerStreamResponseBody], error)
 	// クライアントストリーミング（複数のリクエスト-1レスポンス）
 	HelloClientStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[HelloClientStreamRequestBody, HelloClientStreamResponseBody], error)
+	// 双方向ストリーミング（複数のリクエスト-複数のレスポンス）
+	HelloBidirectionalStream(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody], error)
 }
 
 type sampleServiceClient struct {
@@ -101,6 +104,19 @@ func (c *sampleServiceClient) HelloClientStream(ctx context.Context, opts ...grp
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SampleService_HelloClientStreamClient = grpc.ClientStreamingClient[HelloClientStreamRequestBody, HelloClientStreamResponseBody]
 
+func (c *sampleServiceClient) HelloBidirectionalStream(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &SampleService_ServiceDesc.Streams[2], SampleService_HelloBidirectionalStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type SampleService_HelloBidirectionalStreamClient = grpc.BidiStreamingClient[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]
+
 // SampleServiceServer is the server API for SampleService service.
 // All implementations must embed UnimplementedSampleServiceServer
 // for forward compatibility.
@@ -115,6 +131,8 @@ type SampleServiceServer interface {
 	HelloServerStream(*HelloServerStreamRequestBody, grpc.ServerStreamingServer[HelloServerStreamResponseBody]) error
 	// クライアントストリーミング（複数のリクエスト-1レスポンス）
 	HelloClientStream(grpc.ClientStreamingServer[HelloClientStreamRequestBody, HelloClientStreamResponseBody]) error
+	// 双方向ストリーミング（複数のリクエスト-複数のレスポンス）
+	HelloBidirectionalStream(grpc.BidiStreamingServer[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]) error
 	mustEmbedUnimplementedSampleServiceServer()
 }
 
@@ -136,6 +154,9 @@ func (UnimplementedSampleServiceServer) HelloServerStream(*HelloServerStreamRequ
 }
 func (UnimplementedSampleServiceServer) HelloClientStream(grpc.ClientStreamingServer[HelloClientStreamRequestBody, HelloClientStreamResponseBody]) error {
 	return status.Errorf(codes.Unimplemented, "method HelloClientStream not implemented")
+}
+func (UnimplementedSampleServiceServer) HelloBidirectionalStream(grpc.BidiStreamingServer[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]) error {
+	return status.Errorf(codes.Unimplemented, "method HelloBidirectionalStream not implemented")
 }
 func (UnimplementedSampleServiceServer) mustEmbedUnimplementedSampleServiceServer() {}
 func (UnimplementedSampleServiceServer) testEmbeddedByValue()                       {}
@@ -212,6 +233,13 @@ func _SampleService_HelloClientStream_Handler(srv interface{}, stream grpc.Serve
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SampleService_HelloClientStreamServer = grpc.ClientStreamingServer[HelloClientStreamRequestBody, HelloClientStreamResponseBody]
 
+func _SampleService_HelloBidirectionalStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(SampleServiceServer).HelloBidirectionalStream(&grpc.GenericServerStream[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type SampleService_HelloBidirectionalStreamServer = grpc.BidiStreamingServer[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]
+
 // SampleService_ServiceDesc is the grpc.ServiceDesc for SampleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -237,6 +265,12 @@ var SampleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "HelloClientStream",
 			Handler:       _SampleService_HelloClientStream_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "HelloBidirectionalStream",
+			Handler:       _SampleService_HelloBidirectionalStream_Handler,
+			ServerStreams: true,
 			ClientStreams: true,
 		},
 	},

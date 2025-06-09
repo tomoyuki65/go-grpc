@@ -7,6 +7,8 @@ import (
 	pb "go-grpc/pb/sample"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // インターフェースの定義
@@ -23,6 +25,11 @@ func NewSampleHelloServerStreamUsecase() SampleHelloServerStreamUsecase {
 }
 
 func (u *sampleHelloServerStreamUsecase) Exec(in *pb.HelloServerStreamRequestBody, stream grpc.ServerStreamingServer[pb.HelloServerStreamResponseBody]) error {
+	// バリデーションチェック
+	if err := in.Validate(); err != nil {
+		return status.Errorf(codes.InvalidArgument, "%s", err.Error())
+	}
+
 	resCount := 3
 	for i := 0; i < resCount; i++ {
 		if err := stream.Send(

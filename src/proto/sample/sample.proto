@@ -29,7 +29,7 @@ message HelloAddTextResponseBody {
 
 // HelloServerStreamメソッドのリクエストパラメータ
 message HelloServerStreamRequestBody {
-  // メッセージ
+  // テキスト
   string text = 1 [(validate.rules).string.min_len = 1];
 }
 
@@ -41,12 +41,24 @@ message HelloServerStreamResponseBody {
 
 // HelloClientStreamメソッドのリクエストパラメータ
 message HelloClientStreamRequestBody {
-  // メッセージ
+  // テキスト
   string text = 1 [(validate.rules).string.min_len = 1];
 }
 
 // HelloClientStreamメソッドのレスポンス結果
 message HelloClientStreamResponseBody {
+  // メッセージ
+  string message = 1;
+}
+
+// HelloBidirectionalStreamメソッドのリクエストパラメータ
+message HelloBidirectionalStreamRequestBody {
+  // テキスト
+  string text = 1 [(validate.rules).string.min_len = 1];
+}
+
+// HelloBidirectionalStreamメソッドのレスポンス結果
+message HelloBidirectionalStreamResponseBody {
   // メッセージ
   string message = 1;
 }
@@ -75,6 +87,13 @@ service SampleService {
 
   // クライアントストリーミング（複数のリクエスト-1レスポンス）
   rpc HelloClientStream(stream HelloClientStreamRequestBody) returns (HelloClientStreamResponseBody) {}
+    // Returns:
+    //   - 0 OK: HelloClientStreamResponseBodyを出力
+    //   - 2 Unknown: 不明なエラー
+    //   - 3 INVALID_ARGUMENT: バリデーションエラー）
+
+  // 双方向ストリーミング（複数のリクエスト-複数のレスポンス）
+  rpc HelloBidirectionalStream(stream HelloBidirectionalStreamRequestBody) returns (stream HelloBidirectionalStreamResponseBody) {}
     // Returns:
     //   - 0 OK: HelloClientStreamResponseBodyを出力
     //   - 2 Unknown: 不明なエラー

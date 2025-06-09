@@ -63,7 +63,7 @@ func TestSampleHelloClientStreamOK(t *testing.T) {
 	assert.Equal(t, nil, err)
 }
 
-func TestSampleHelloClientStreamErr(t *testing.T) {
+func TestSampleHelloClientStreamRecvErr(t *testing.T) {
 	// ユースケースのインスタンス化
 	sampleUsecase := NewSampleHelloClientStreamUsecase()
 
@@ -72,6 +72,25 @@ func TestSampleHelloClientStreamErr(t *testing.T) {
 		ctx:       context.Background(),
 		recvData:  []*pb.HelloClientStreamRequestBody{{Text: "A"}, {Text: "B"}, {Text: "C"}},
 		recvError: fmt.Errorf("error"),
+		sendError: nil,
+	}
+
+	// テストの実行
+	err := sampleUsecase.Exec(mockClientStream)
+
+	// 検証
+	assert.NotEqual(t, nil, err)
+}
+
+func TestSampleHelloClientStreamValidateErr(t *testing.T) {
+	// ユースケースのインスタンス化
+	sampleUsecase := NewSampleHelloClientStreamUsecase()
+
+	// パラメータの設定
+	mockClientStream := &mockHelloClientStream{
+		ctx:       context.Background(),
+		recvData:  []*pb.HelloClientStreamRequestBody{{Text: ""}, {Text: "B"}, {Text: "C"}},
+		recvError: nil,
 		sendError: nil,
 	}
 

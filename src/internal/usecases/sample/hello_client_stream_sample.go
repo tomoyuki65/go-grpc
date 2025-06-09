@@ -8,6 +8,8 @@ import (
 	pb "go-grpc/pb/sample"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // インターフェースの定義
@@ -35,6 +37,12 @@ func (u *sampleHelloClientStreamUsecase) Exec(stream grpc.ClientStreamingServer[
 		if err != nil {
 			return err
 		}
+
+		// バリデーションチェック
+		if err := req.Validate(); err != nil {
+			return status.Errorf(codes.InvalidArgument, "%s", err.Error())
+		}
+
 		textList = append(textList, req.GetText())
 	}
 }

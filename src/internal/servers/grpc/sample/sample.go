@@ -54,3 +54,12 @@ func (s *sample) HelloClientStream(stream grpc.ClientStreamingServer[pb.HelloCli
 	// ユースケースの実行
 	return sampleUsecase.Exec(stream)
 }
+
+// 双方向ストリーミングのメソッド
+func (s *sample) HelloBidirectionalStream(stream grpc.BidiStreamingServer[pb.HelloBidirectionalStreamRequestBody, pb.HelloBidirectionalStreamResponseBody]) error {
+	// インスタンス生成
+	sampleUsecase := usecaseSample.NewSampleHelloBidirectionalStreamUsecase()
+
+	// ユースケースの実行
+	return sampleUsecase.Exec(stream)
+}
