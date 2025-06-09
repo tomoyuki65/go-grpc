@@ -27,16 +27,37 @@ message HelloAddTextResponseBody {
   string message = 1;
 }
 
+// HelloServerStreamメソッドのリクエストパラメータ
+message HelloServerStreamRequestBody {
+  // メッセージ
+  string text = 1 [(validate.rules).string.min_len = 1];
+}
+
+// HelloServerStreamメソッドのレスポンス結果
+message HelloServerStreamResponseBody {
+  // メッセージ
+  string message = 1;
+}
+
 // サンプルサービス
 service SampleService {
   // 「Hello World !!」を出力
   rpc Hello(Empty) returns (HelloResponseBody) {}
     // Returns:
     //   - 0 OK: HelloResponseBodyを出力
+    //   - 2 Unknown: 不明なエラー
 
   // 「Hello {リクエストパラメータのtext}」を出力
   rpc HelloAddText(HelloAddTextRequestBody) returns (HelloAddTextResponseBody) {}
+    // Returns:  
+    //   - 0 OK: HelloAddTextResponseBodyを出力  
+    //   - 2 Unknown: 不明なエラー  
+    //   - 3 INVALID_ARGUMENT: バリデーションエラー  
+
+  // サーバーストリーミング（1リクエスト-複数のレスポンス）
+  rpc HelloServerStream(HelloServerStreamRequestBody) returns (stream HelloServerStreamResponseBody) {}
     // Returns:
-    //   - 0 OK: HelloAddTextResponseBodyを出力
+    //   - 0 OK: HelloServerStreamResponseBodyを出力（複数回）
+    //   - 2 Unknown: 不明なエラー
     //   - 3 INVALID_ARGUMENT: バリデーションエラー
 }

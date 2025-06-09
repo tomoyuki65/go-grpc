@@ -59,6 +59,8 @@
 				
 				<option value="file1">go-grpc/internal/usecases/sample/hello_sample.go (100.0%)</option>
 				
+				<option value="file2">go-grpc/internal/usecases/sample/hello_server_stream_sample.go (100.0%)</option>
+				
 				</select>
 			</div>
 			<div id="legend">
@@ -114,7 +116,6 @@ import (
         "context"
 
         pb "go-grpc/pb/sample"
-
         serviceSample "go-grpc/internal/services/sample"
 )
 
@@ -146,6 +147,46 @@ func (u *sampleHelloUsecase) Exec(ctx context.Context, in *pb.Empty) (*pb.HelloR
         <span class="cov8" title="1">return &amp;pb.HelloResponseBody{Message: text}, nil</span>
 }
 </pre>
+		
+		<pre class="file" id="file2" style="display: none">package sample
+
+import (
+        "fmt"
+        "time"
+
+        pb "go-grpc/pb/sample"
+
+        "google.golang.org/grpc"
+)
+
+// インターフェースの定義
+type SampleHelloServerStreamUsecase interface {
+        Exec(in *pb.HelloServerStreamRequestBody, stream grpc.ServerStreamingServer[pb.HelloServerStreamResponseBody]) error
+}
+
+// 構造体の定義
+type sampleHelloServerStreamUsecase struct {}
+
+// インスタンス生成用関数の定義
+func NewSampleHelloServerStreamUsecase() SampleHelloServerStreamUsecase <span class="cov8" title="1">{
+        return &amp;sampleHelloServerStreamUsecase{}
+}</span>
+
+func (u *sampleHelloServerStreamUsecase) Exec(in *pb.HelloServerStreamRequestBody, stream grpc.ServerStreamingServer[pb.HelloServerStreamResponseBody]) error <span class="cov8" title="1">{
+        resCount := 3
+        for i := 0; i &lt; resCount; i++ </span><span class="cov8" title="1">{
+                if err := stream.Send(
+                        &amp;pb.HelloServerStreamResponseBody{
+                                Message: fmt.Sprintf("[%d]Hello, %s", i, in.GetText()),
+                        },
+                ); err != nil </span><span class="cov8" title="1">{
+                        return err
+                }</span>
+                <span class="cov8" title="1">time.Sleep(time.Second * 1)</span>
+        }
+        
+        <span class="cov8" title="1">return nil</span>
+}</pre>
 		
 		</div>
 	</body>

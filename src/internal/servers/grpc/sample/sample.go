@@ -7,6 +7,8 @@ import (
 	serviceSample "go-grpc/internal/services/sample"
 	usecaseSample "go-grpc/internal/usecases/sample"
 	pb "go-grpc/pb/sample"
+
+	"google.golang.org/grpc"
 )
 
 type sample struct {
@@ -33,4 +35,13 @@ func (s *sample) HelloAddText(ctx context.Context, in *pb.HelloAddTextRequestBod
 
 	// ユースケースの実行
 	return sampleUsecase.Exec(ctx, in)
+}
+
+// サーバーストリーミングのメソッド
+func (s *sample) HelloServerStream(in *pb.HelloServerStreamRequestBody, stream grpc.ServerStreamingServer[pb.HelloServerStreamResponseBody]) error {
+	// インスタンス生成
+	sampleUsecase := usecaseSample.NewSampleHelloServerStreamUsecase()
+
+	// ユースケースの実行
+	return sampleUsecase.Exec(in, stream)
 }

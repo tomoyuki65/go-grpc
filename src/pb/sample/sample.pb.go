@@ -197,6 +197,98 @@ func (x *HelloAddTextResponseBody) GetMessage() string {
 	return ""
 }
 
+// HelloServerStreamメソッドのリクエストパラメータ
+type HelloServerStreamRequestBody struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// メッセージ
+	Text          string `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HelloServerStreamRequestBody) Reset() {
+	*x = HelloServerStreamRequestBody{}
+	mi := &file_proto_sample_sample_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HelloServerStreamRequestBody) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HelloServerStreamRequestBody) ProtoMessage() {}
+
+func (x *HelloServerStreamRequestBody) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_sample_sample_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HelloServerStreamRequestBody.ProtoReflect.Descriptor instead.
+func (*HelloServerStreamRequestBody) Descriptor() ([]byte, []int) {
+	return file_proto_sample_sample_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *HelloServerStreamRequestBody) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+// HelloServerStreamメソッドのレスポンス結果
+type HelloServerStreamResponseBody struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// メッセージ
+	Message       string `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *HelloServerStreamResponseBody) Reset() {
+	*x = HelloServerStreamResponseBody{}
+	mi := &file_proto_sample_sample_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HelloServerStreamResponseBody) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HelloServerStreamResponseBody) ProtoMessage() {}
+
+func (x *HelloServerStreamResponseBody) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_sample_sample_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HelloServerStreamResponseBody.ProtoReflect.Descriptor instead.
+func (*HelloServerStreamResponseBody) Descriptor() ([]byte, []int) {
+	return file_proto_sample_sample_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *HelloServerStreamResponseBody) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_proto_sample_sample_proto protoreflect.FileDescriptor
 
 const file_proto_sample_sample_proto_rawDesc = "" +
@@ -208,10 +300,15 @@ const file_proto_sample_sample_proto_rawDesc = "" +
 	"\x17HelloAddTextRequestBody\x12\x1b\n" +
 	"\x04text\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04text\"4\n" +
 	"\x18HelloAddTextResponseBody\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage2\x99\x01\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\";\n" +
+	"\x1cHelloServerStreamRequestBody\x12\x1b\n" +
+	"\x04text\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04text\"9\n" +
+	"\x1dHelloServerStreamResponseBody\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2\xff\x01\n" +
 	"\rSampleService\x123\n" +
 	"\x05Hello\x12\r.sample.Empty\x1a\x19.sample.HelloResponseBody\"\x00\x12S\n" +
-	"\fHelloAddText\x12\x1f.sample.HelloAddTextRequestBody\x1a .sample.HelloAddTextResponseBody\"\x00B\vZ\tpb/sampleb\x06proto3"
+	"\fHelloAddText\x12\x1f.sample.HelloAddTextRequestBody\x1a .sample.HelloAddTextResponseBody\"\x00\x12d\n" +
+	"\x11HelloServerStream\x12$.sample.HelloServerStreamRequestBody\x1a%.sample.HelloServerStreamResponseBody\"\x000\x01B\vZ\tpb/sampleb\x06proto3"
 
 var (
 	file_proto_sample_sample_proto_rawDescOnce sync.Once
@@ -225,20 +322,24 @@ func file_proto_sample_sample_proto_rawDescGZIP() []byte {
 	return file_proto_sample_sample_proto_rawDescData
 }
 
-var file_proto_sample_sample_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_proto_sample_sample_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_sample_sample_proto_goTypes = []any{
-	(*Empty)(nil),                    // 0: sample.Empty
-	(*HelloResponseBody)(nil),        // 1: sample.HelloResponseBody
-	(*HelloAddTextRequestBody)(nil),  // 2: sample.HelloAddTextRequestBody
-	(*HelloAddTextResponseBody)(nil), // 3: sample.HelloAddTextResponseBody
+	(*Empty)(nil),                         // 0: sample.Empty
+	(*HelloResponseBody)(nil),             // 1: sample.HelloResponseBody
+	(*HelloAddTextRequestBody)(nil),       // 2: sample.HelloAddTextRequestBody
+	(*HelloAddTextResponseBody)(nil),      // 3: sample.HelloAddTextResponseBody
+	(*HelloServerStreamRequestBody)(nil),  // 4: sample.HelloServerStreamRequestBody
+	(*HelloServerStreamResponseBody)(nil), // 5: sample.HelloServerStreamResponseBody
 }
 var file_proto_sample_sample_proto_depIdxs = []int32{
 	0, // 0: sample.SampleService.Hello:input_type -> sample.Empty
 	2, // 1: sample.SampleService.HelloAddText:input_type -> sample.HelloAddTextRequestBody
-	1, // 2: sample.SampleService.Hello:output_type -> sample.HelloResponseBody
-	3, // 3: sample.SampleService.HelloAddText:output_type -> sample.HelloAddTextResponseBody
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	4, // 2: sample.SampleService.HelloServerStream:input_type -> sample.HelloServerStreamRequestBody
+	1, // 3: sample.SampleService.Hello:output_type -> sample.HelloResponseBody
+	3, // 4: sample.SampleService.HelloAddText:output_type -> sample.HelloAddTextResponseBody
+	5, // 5: sample.SampleService.HelloServerStream:output_type -> sample.HelloServerStreamResponseBody
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -255,7 +356,7 @@ func file_proto_sample_sample_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_sample_sample_proto_rawDesc), len(file_proto_sample_sample_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

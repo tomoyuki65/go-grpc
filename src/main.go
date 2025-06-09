@@ -41,6 +41,10 @@ func main() {
 			interceptor.RequestUnaryInterceptor,
 			interceptor.AuthUnaryInterceptor,
 		),
+		grpc.ChainStreamInterceptor(
+			interceptor.RequestStreamInterceptor,
+			interceptor.AuthStreamInterceptor,
+		),
 	)
 
 	// サービス設定

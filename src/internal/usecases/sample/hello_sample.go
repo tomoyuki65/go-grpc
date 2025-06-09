@@ -3,9 +3,8 @@ package sample
 import (
 	"context"
 
-	pb "go-grpc/pb/sample"
-
 	serviceSample "go-grpc/internal/services/sample"
+	pb "go-grpc/pb/sample"
 )
 
 // インターフェースの定義
