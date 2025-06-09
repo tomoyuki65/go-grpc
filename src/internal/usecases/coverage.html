@@ -57,9 +57,11 @@
 				
 				<option value="file0">go-grpc/internal/usecases/sample/hello_add_text_sample.go (100.0%)</option>
 				
-				<option value="file1">go-grpc/internal/usecases/sample/hello_sample.go (100.0%)</option>
+				<option value="file1">go-grpc/internal/usecases/sample/hello_client_stream_sample.go (100.0%)</option>
 				
-				<option value="file2">go-grpc/internal/usecases/sample/hello_server_stream_sample.go (100.0%)</option>
+				<option value="file2">go-grpc/internal/usecases/sample/hello_sample.go (100.0%)</option>
+				
+				<option value="file3">go-grpc/internal/usecases/sample/hello_server_stream_sample.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -113,10 +115,52 @@ func (u *sampleHelloAddTextUsecase) Exec(ctx context.Context, in *pb.HelloAddTex
 		<pre class="file" id="file1" style="display: none">package sample
 
 import (
-        "context"
+        "errors"
+        "fmt"
+        "io"
 
         pb "go-grpc/pb/sample"
+
+        "google.golang.org/grpc"
+)
+
+// インターフェースの定義
+type SampleHelloClientStreamUsecase interface {
+        Exec(stream grpc.ClientStreamingServer[pb.HelloClientStreamRequestBody, pb.HelloClientStreamResponseBody]) error
+}
+
+// 構造体の定義
+type sampleHelloClientStreamUsecase struct{}
+
+// インスタンス生成用関数の定義
+func NewSampleHelloClientStreamUsecase() SampleHelloClientStreamUsecase <span class="cov8" title="1">{
+        return &amp;sampleHelloClientStreamUsecase{}
+}</span>
+
+func (u *sampleHelloClientStreamUsecase) Exec(stream grpc.ClientStreamingServer[pb.HelloClientStreamRequestBody, pb.HelloClientStreamResponseBody]) error <span class="cov8" title="1">{
+        textList := make([]string, 0)
+
+        for </span><span class="cov8" title="1">{
+                req, err := stream.Recv()
+                if errors.Is(err, io.EOF) </span><span class="cov8" title="1">{
+                        msg := fmt.Sprintf("Hello, %v!", textList)
+                        return stream.SendAndClose(&amp;pb.HelloClientStreamResponseBody{Message: msg})
+                }</span>
+                <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
+                        return err
+                }</span>
+                <span class="cov8" title="1">textList = append(textList, req.GetText())</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package sample
+
+import (
+        "context"
+
         serviceSample "go-grpc/internal/services/sample"
+        pb "go-grpc/pb/sample"
 )
 
 // インターフェースの定義
@@ -148,7 +192,7 @@ func (u *sampleHelloUsecase) Exec(ctx context.Context, in *pb.Empty) (*pb.HelloR
 }
 </pre>
 		
-		<pre class="file" id="file2" style="display: none">package sample
+		<pre class="file" id="file3" style="display: none">package sample
 
 import (
         "fmt"
@@ -165,7 +209,7 @@ type SampleHelloServerStreamUsecase interface {
 }
 
 // 構造体の定義
-type sampleHelloServerStreamUsecase struct {}
+type sampleHelloServerStreamUsecase struct{}
 
 // インスタンス生成用関数の定義
 func NewSampleHelloServerStreamUsecase() SampleHelloServerStreamUsecase <span class="cov8" title="1">{
@@ -184,9 +228,10 @@ func (u *sampleHelloServerStreamUsecase) Exec(in *pb.HelloServerStreamRequestBod
                 }</span>
                 <span class="cov8" title="1">time.Sleep(time.Second * 1)</span>
         }
-        
+
         <span class="cov8" title="1">return nil</span>
-}</pre>
+}
+</pre>
 		
 		</div>
 	</body>

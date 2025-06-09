@@ -45,3 +45,12 @@ func (s *sample) HelloServerStream(in *pb.HelloServerStreamRequestBody, stream g
 	// ユースケースの実行
 	return sampleUsecase.Exec(in, stream)
 }
+
+// クライアントストリーミングのメソッド
+func (s *sample) HelloClientStream(stream grpc.ClientStreamingServer[pb.HelloClientStreamRequestBody, pb.HelloClientStreamResponseBody]) error {
+	// インスタンス生成
+	sampleUsecase := usecaseSample.NewSampleHelloClientStreamUsecase()
+
+	// ユースケースの実行
+	return sampleUsecase.Exec(stream)
+}

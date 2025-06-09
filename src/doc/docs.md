@@ -7,6 +7,8 @@
     - [Empty](#sample-Empty)
     - [HelloAddTextRequestBody](#sample-HelloAddTextRequestBody)
     - [HelloAddTextResponseBody](#sample-HelloAddTextResponseBody)
+    - [HelloClientStreamRequestBody](#sample-HelloClientStreamRequestBody)
+    - [HelloClientStreamResponseBody](#sample-HelloClientStreamResponseBody)
     - [HelloResponseBody](#sample-HelloResponseBody)
     - [HelloServerStreamRequestBody](#sample-HelloServerStreamRequestBody)
     - [HelloServerStreamResponseBody](#sample-HelloServerStreamResponseBody)
@@ -53,6 +55,36 @@ HelloAddTextメソッドのリクエストパラメータ
 
 ### HelloAddTextResponseBody
 HelloAddTextメソッドのレスポンス結果
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| message | [string](#string) |  | メッセージ |
+
+
+
+
+
+
+<a name="sample-HelloClientStreamRequestBody"></a>
+
+### HelloClientStreamRequestBody
+HelloClientStreamメソッドのリクエストパラメータ
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| text | [string](#string) |  | メッセージ |
+
+
+
+
+
+
+<a name="sample-HelloClientStreamResponseBody"></a>
+
+### HelloClientStreamResponseBody
+HelloClientStreamメソッドのレスポンス結果
 
 
 | Field | Type | Label | Description |
@@ -125,6 +157,7 @@ HelloServerStreamメソッドのレスポンス結果
 | Hello | [Empty](#sample-Empty) | [HelloResponseBody](#sample-HelloResponseBody) | 「Hello World !!」を出力 |
 | HelloAddText | [HelloAddTextRequestBody](#sample-HelloAddTextRequestBody) | [HelloAddTextResponseBody](#sample-HelloAddTextResponseBody) | 「Hello {リクエストパラメータのtext}」を出力 |
 | HelloServerStream | [HelloServerStreamRequestBody](#sample-HelloServerStreamRequestBody) | [HelloServerStreamResponseBody](#sample-HelloServerStreamResponseBody) stream | サーバーストリーミング（1リクエスト-複数のレスポンス） |
+| HelloClientStream | [HelloClientStreamRequestBody](#sample-HelloClientStreamRequestBody) stream | [HelloClientStreamResponseBody](#sample-HelloClientStreamResponseBody) | クライアントストリーミング（複数のリクエスト-1レスポンス） |
 
  
 

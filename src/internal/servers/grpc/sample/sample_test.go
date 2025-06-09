@@ -2,6 +2,9 @@ package sample
 
 import (
 	"context"
+	"errors"
+	"io"
+	"strconv"
 	"testing"
 
 	pb "go-grpc/pb/sample"
@@ -29,6 +32,38 @@ func (m *mockHelloServerStream) Context() context.Context {
 	return m.ctx
 }
 
+// HelloClientStreamのstream用のモック構造体
+type mockHelloClientStream struct {
+	grpc.ClientStreamingServer[pb.HelloClientStreamRequestBody, pb.HelloClientStreamResponseBody]
+	ctx        context.Context
+	recvData   []*pb.HelloClientStreamRequestBody
+	recvIndex  int
+	recvError  error
+	sendResult *pb.HelloClientStreamResponseBody
+	sendError  error
+}
+
+func (m *mockHelloClientStream) Recv() (*pb.HelloClientStreamRequestBody, error) {
+	if m.recvError != nil {
+		return nil, m.recvError
+	}
+	if m.recvIndex >= len(m.recvData) {
+		return nil, io.EOF
+	}
+	data := m.recvData[m.recvIndex]
+	m.recvIndex++
+	return data, nil
+}
+
+func (m *mockHelloClientStream) SendAndClose(resp *pb.HelloClientStreamResponseBody) error {
+	m.sendResult = resp
+	return m.sendError
+}
+
+func (m *mockHelloClientStream) Context() context.Context {
+	return m.ctx
+}
+
 // カバレッジの対象から除外
 func TestExcludeFromCoverage(t *testing.T) {
 	s := NewSample()
@@ -37,12 +72,12 @@ func TestExcludeFromCoverage(t *testing.T) {
 
 	// サーバーストリーミング
 	in := &pb.HelloServerStreamRequestBody{Text: "World !"}
-	mockStream := &mockHelloServerStream{
-		ctx:     context.Background(),
-		sent:    []*pb.HelloServerStreamResponseBody{},
-		sendErr: nil,
-	}
-	_ = s.HelloServerStream(in, mockStream)
+	mockServerStream := &mockHelloServerStream{}
+	_ = s.HelloServerStream(in, mockServerStream)
+
+	// クライアントストリーミング
+	mockClientStream := &mockHelloClientStream{}
+	_ = s.HelloClientStream(mockClientStream)
 }
 
 func TestSampleHello(t *testing.T) {
@@ -113,7 +148,7 @@ func TestSampleHelloServerStream(t *testing.T) {
 	var msgs []string
 	for {
 		res, err := stream.Recv()
-		if err != nil {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		msgs = append(msgs, res.Message)
@@ -121,4 +156,39 @@ func TestSampleHelloServerStream(t *testing.T) {
 
 	// 検証
 	assert.Equal(t, []string{"[0]Hello, World !", "[1]Hello, World !", "[2]Hello, World !"}, msgs)
+}
+
+func TestSampleHelloClientStream(t *testing.T) {
+	// gRPCクライアントの設定
+	conn, err := grpc.NewClient("dns:///localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		t.Fatalf("Failed to connect: %v", err)
+	}
+	defer conn.Close()
+	client := pb.NewSampleServiceClient(conn)
+
+	// メタデータにauthorizationを追加
+	ctx := context.Background()
+	md := metadata.New(map[string]string{"authorization": "Bearer token"})
+	ctx = metadata.NewOutgoingContext(ctx, md)
+
+	// テストの実行
+	stream, err := client.HelloClientStream(ctx)
+	if err != nil {
+		t.Fatalf("Failed to call client.HelloClientStream: %v", err)
+	}
+
+	sendCount := 3
+	for i := 0; i < sendCount; i++ {
+		if err := stream.Send(&pb.HelloClientStreamRequestBody{Text: strconv.Itoa(i)}); err != nil {
+			t.Fatalf("Failed to stream.Send: %v", err)
+		}
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		t.Fatalf("Failed to close and stream.CloseAndRecv: %v", err)
+	}
+
+	assert.Equal(t, "Hello, [0 1 2]!", res.Message)
 }

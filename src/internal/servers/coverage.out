@@ -1,5 +1,6 @@
 mode: set
-go-grpc/internal/servers/grpc/sample/sample.go:19.26,21.2 1 1
-go-grpc/internal/servers/grpc/sample/sample.go:23.90,31.2 4 1
-go-grpc/internal/servers/grpc/sample/sample.go:33.122,39.2 2 1
-go-grpc/internal/servers/grpc/sample/sample.go:42.148,48.2 2 1
+go-grpc/internal/servers/grpc/sample/sample.go:18.26,20.2 1 1
+go-grpc/internal/servers/grpc/sample/sample.go:22.90,30.2 4 1
+go-grpc/internal/servers/grpc/sample/sample.go:32.122,38.2 2 1
+go-grpc/internal/servers/grpc/sample/sample.go:41.148,47.2 2 1
+go-grpc/internal/servers/grpc/sample/sample.go:50.144,56.2 2 1

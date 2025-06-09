@@ -672,3 +672,222 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = HelloServerStreamResponseBodyValidationError{}
+
+// Validate checks the field values on HelloClientStreamRequestBody with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HelloClientStreamRequestBody) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HelloClientStreamRequestBody with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// HelloClientStreamRequestBodyMultiError, or nil if none found.
+func (m *HelloClientStreamRequestBody) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HelloClientStreamRequestBody) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetText()) < 1 {
+		err := HelloClientStreamRequestBodyValidationError{
+			field:  "Text",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return HelloClientStreamRequestBodyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HelloClientStreamRequestBodyMultiError is an error wrapping multiple
+// validation errors returned by HelloClientStreamRequestBody.ValidateAll() if
+// the designated constraints aren't met.
+type HelloClientStreamRequestBodyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HelloClientStreamRequestBodyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HelloClientStreamRequestBodyMultiError) AllErrors() []error { return m }
+
+// HelloClientStreamRequestBodyValidationError is the validation error returned
+// by HelloClientStreamRequestBody.Validate if the designated constraints
+// aren't met.
+type HelloClientStreamRequestBodyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HelloClientStreamRequestBodyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HelloClientStreamRequestBodyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HelloClientStreamRequestBodyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HelloClientStreamRequestBodyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HelloClientStreamRequestBodyValidationError) ErrorName() string {
+	return "HelloClientStreamRequestBodyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HelloClientStreamRequestBodyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHelloClientStreamRequestBody.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HelloClientStreamRequestBodyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HelloClientStreamRequestBodyValidationError{}
+
+// Validate checks the field values on HelloClientStreamResponseBody with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *HelloClientStreamResponseBody) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on HelloClientStreamResponseBody with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// HelloClientStreamResponseBodyMultiError, or nil if none found.
+func (m *HelloClientStreamResponseBody) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *HelloClientStreamResponseBody) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Message
+
+	if len(errors) > 0 {
+		return HelloClientStreamResponseBodyMultiError(errors)
+	}
+
+	return nil
+}
+
+// HelloClientStreamResponseBodyMultiError is an error wrapping multiple
+// validation errors returned by HelloClientStreamResponseBody.ValidateAll()
+// if the designated constraints aren't met.
+type HelloClientStreamResponseBodyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m HelloClientStreamResponseBodyMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m HelloClientStreamResponseBodyMultiError) AllErrors() []error { return m }
+
+// HelloClientStreamResponseBodyValidationError is the validation error
+// returned by HelloClientStreamResponseBody.Validate if the designated
+// constraints aren't met.
+type HelloClientStreamResponseBodyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e HelloClientStreamResponseBodyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e HelloClientStreamResponseBodyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e HelloClientStreamResponseBodyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e HelloClientStreamResponseBodyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e HelloClientStreamResponseBodyValidationError) ErrorName() string {
+	return "HelloClientStreamResponseBodyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e HelloClientStreamResponseBodyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sHelloClientStreamResponseBody.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = HelloClientStreamResponseBodyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = HelloClientStreamResponseBodyValidationError{}

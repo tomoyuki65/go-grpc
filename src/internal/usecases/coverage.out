@@ -3,6 +3,13 @@ go-grpc/internal/usecases/sample/hello_add_text_sample.go:22.63,24.2 1 1
 go-grpc/internal/usecases/sample/hello_add_text_sample.go:26.133,28.38 1 1
 go-grpc/internal/usecases/sample/hello_add_text_sample.go:28.38,30.3 1 1
 go-grpc/internal/usecases/sample/hello_add_text_sample.go:32.2,34.56 2 1
+go-grpc/internal/usecases/sample/hello_client_stream_sample.go:22.73,24.2 1 1
+go-grpc/internal/usecases/sample/hello_client_stream_sample.go:26.155,29.6 2 1
+go-grpc/internal/usecases/sample/hello_client_stream_sample.go:29.6,31.29 2 1
+go-grpc/internal/usecases/sample/hello_client_stream_sample.go:31.29,34.4 2 1
+go-grpc/internal/usecases/sample/hello_client_stream_sample.go:35.3,35.17 1 1
+go-grpc/internal/usecases/sample/hello_client_stream_sample.go:35.17,37.4 1 1
+go-grpc/internal/usecases/sample/hello_client_stream_sample.go:38.3,38.45 1 1
 go-grpc/internal/usecases/sample/hello_sample.go:23.22,27.2 1 1
 go-grpc/internal/usecases/sample/hello_sample.go:29.101,31.16 2 1
 go-grpc/internal/usecases/sample/hello_sample.go:31.16,33.3 1 1

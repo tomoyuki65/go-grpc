@@ -22,6 +22,7 @@ const (
 	SampleService_Hello_FullMethodName             = "/sample.SampleService/Hello"
 	SampleService_HelloAddText_FullMethodName      = "/sample.SampleService/HelloAddText"
 	SampleService_HelloServerStream_FullMethodName = "/sample.SampleService/HelloServerStream"
+	SampleService_HelloClientStream_FullMethodName = "/sample.SampleService/HelloClientStream"
 )
 
 // SampleServiceClient is the client API for SampleService service.
@@ -36,6 +37,8 @@ type SampleServiceClient interface {
 	HelloAddText(ctx context.Context, in *HelloAddTextRequestBody, opts ...grpc.CallOption) (*HelloAddTextResponseBody, error)
 	// サーバーストリーミング（1リクエスト-複数のレスポンス）
 	HelloServerStream(ctx context.Context, in *HelloServerStreamRequestBody, opts ...grpc.CallOption) (grpc.ServerStreamingClient[HelloServerStreamResponseBody], error)
+	// クライアントストリーミング（複数のリクエスト-1レスポンス）
+	HelloClientStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[HelloClientStreamRequestBody, HelloClientStreamResponseBody], error)
 }
 
 type sampleServiceClient struct {
@@ -85,6 +88,19 @@ func (c *sampleServiceClient) HelloServerStream(ctx context.Context, in *HelloSe
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SampleService_HelloServerStreamClient = grpc.ServerStreamingClient[HelloServerStreamResponseBody]
 
+func (c *sampleServiceClient) HelloClientStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[HelloClientStreamRequestBody, HelloClientStreamResponseBody], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &SampleService_ServiceDesc.Streams[1], SampleService_HelloClientStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[HelloClientStreamRequestBody, HelloClientStreamResponseBody]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type SampleService_HelloClientStreamClient = grpc.ClientStreamingClient[HelloClientStreamRequestBody, HelloClientStreamResponseBody]
+
 // SampleServiceServer is the server API for SampleService service.
 // All implementations must embed UnimplementedSampleServiceServer
 // for forward compatibility.
@@ -97,6 +113,8 @@ type SampleServiceServer interface {
 	HelloAddText(context.Context, *HelloAddTextRequestBody) (*HelloAddTextResponseBody, error)
 	// サーバーストリーミング（1リクエスト-複数のレスポンス）
 	HelloServerStream(*HelloServerStreamRequestBody, grpc.ServerStreamingServer[HelloServerStreamResponseBody]) error
+	// クライアントストリーミング（複数のリクエスト-1レスポンス）
+	HelloClientStream(grpc.ClientStreamingServer[HelloClientStreamRequestBody, HelloClientStreamResponseBody]) error
 	mustEmbedUnimplementedSampleServiceServer()
 }
 
@@ -115,6 +133,9 @@ func (UnimplementedSampleServiceServer) HelloAddText(context.Context, *HelloAddT
 }
 func (UnimplementedSampleServiceServer) HelloServerStream(*HelloServerStreamRequestBody, grpc.ServerStreamingServer[HelloServerStreamResponseBody]) error {
 	return status.Errorf(codes.Unimplemented, "method HelloServerStream not implemented")
+}
+func (UnimplementedSampleServiceServer) HelloClientStream(grpc.ClientStreamingServer[HelloClientStreamRequestBody, HelloClientStreamResponseBody]) error {
+	return status.Errorf(codes.Unimplemented, "method HelloClientStream not implemented")
 }
 func (UnimplementedSampleServiceServer) mustEmbedUnimplementedSampleServiceServer() {}
 func (UnimplementedSampleServiceServer) testEmbeddedByValue()                       {}
@@ -184,6 +205,13 @@ func _SampleService_HelloServerStream_Handler(srv interface{}, stream grpc.Serve
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SampleService_HelloServerStreamServer = grpc.ServerStreamingServer[HelloServerStreamResponseBody]
 
+func _SampleService_HelloClientStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(SampleServiceServer).HelloClientStream(&grpc.GenericServerStream[HelloClientStreamRequestBody, HelloClientStreamResponseBody]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type SampleService_HelloClientStreamServer = grpc.ClientStreamingServer[HelloClientStreamRequestBody, HelloClientStreamResponseBody]
+
 // SampleService_ServiceDesc is the grpc.ServiceDesc for SampleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -205,6 +233,11 @@ var SampleService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "HelloServerStream",
 			Handler:       _SampleService_HelloServerStream_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "HelloClientStream",
+			Handler:       _SampleService_HelloClientStream_Handler,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "proto/sample/sample.proto",

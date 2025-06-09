@@ -74,17 +74,16 @@
 import (
         "context"
 
-        pb "go-grpc/pb/sample"
         repositorySample "go-grpc/internal/repositories/sample"
         serviceSample "go-grpc/internal/services/sample"
         usecaseSample "go-grpc/internal/usecases/sample"
+        pb "go-grpc/pb/sample"
 
         "google.golang.org/grpc"
 )
 
 type sample struct {
         pb.UnimplementedSampleServiceServer
-        ctx context.Context
 }
 
 func NewSample() *sample <span class="cov8" title="1">{
@@ -116,6 +115,15 @@ func (s *sample) HelloServerStream(in *pb.HelloServerStreamRequestBody, stream g
 
         // ユースケースの実行
         return sampleUsecase.Exec(in, stream)
+}</span>
+
+// クライアントストリーミングのメソッド
+func (s *sample) HelloClientStream(stream grpc.ClientStreamingServer[pb.HelloClientStreamRequestBody, pb.HelloClientStreamResponseBody]) error <span class="cov8" title="1">{
+        // インスタンス生成
+        sampleUsecase := usecaseSample.NewSampleHelloClientStreamUsecase()
+
+        // ユースケースの実行
+        return sampleUsecase.Exec(stream)
 }</span>
 </pre>
 		

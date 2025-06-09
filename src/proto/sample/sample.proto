@@ -39,6 +39,18 @@ message HelloServerStreamResponseBody {
   string message = 1;
 }
 
+// HelloClientStreamメソッドのリクエストパラメータ
+message HelloClientStreamRequestBody {
+  // メッセージ
+  string text = 1 [(validate.rules).string.min_len = 1];
+}
+
+// HelloClientStreamメソッドのレスポンス結果
+message HelloClientStreamResponseBody {
+  // メッセージ
+  string message = 1;
+}
+
 // サンプルサービス
 service SampleService {
   // 「Hello World !!」を出力
@@ -60,4 +72,11 @@ service SampleService {
     //   - 0 OK: HelloServerStreamResponseBodyを出力（複数回）
     //   - 2 Unknown: 不明なエラー
     //   - 3 INVALID_ARGUMENT: バリデーションエラー
+
+  // クライアントストリーミング（複数のリクエスト-1レスポンス）
+  rpc HelloClientStream(stream HelloClientStreamRequestBody) returns (HelloClientStreamResponseBody) {}
+    // Returns:
+    //   - 0 OK: HelloClientStreamResponseBodyを出力
+    //   - 2 Unknown: 不明なエラー
+    //   - 3 INVALID_ARGUMENT: バリデーションエラー）
 }
