@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"go-grpc/internal/util/logger"
 	pb "go-grpc/pb/sample"
 
 	"google.golang.org/grpc/codes"
@@ -26,6 +27,9 @@ func NewSampleHelloAddTextUsecase() SampleHelloAddTextUsecase {
 func (u *sampleHelloAddTextUsecase) Exec(ctx context.Context, in *pb.HelloAddTextRequestBody) (*pb.HelloAddTextResponseBody, error) {
 	// バリデーションチェック
 	if err := in.Validate(); err != nil {
+		msg := fmt.Sprintf("バリデーションエラー：%s", err.Error())
+		logger.Warn(ctx, msg)
+
 		return nil, status.Errorf(codes.InvalidArgument, "%s", err.Error())
 	}
 

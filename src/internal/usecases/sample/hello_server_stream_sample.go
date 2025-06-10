@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"go-grpc/internal/util/logger"
 	pb "go-grpc/pb/sample"
 
 	"google.golang.org/grpc"
@@ -25,8 +26,14 @@ func NewSampleHelloServerStreamUsecase() SampleHelloServerStreamUsecase {
 }
 
 func (u *sampleHelloServerStreamUsecase) Exec(in *pb.HelloServerStreamRequestBody, stream grpc.ServerStreamingServer[pb.HelloServerStreamResponseBody]) error {
+	// コンテキストを取得
+	ctx := stream.Context()
+
 	// バリデーションチェック
 	if err := in.Validate(); err != nil {
+		msg := fmt.Sprintf("バリデーションエラー：%s", err.Error())
+		logger.Warn(ctx, msg)
+
 		return status.Errorf(codes.InvalidArgument, "%s", err.Error())
 	}
 

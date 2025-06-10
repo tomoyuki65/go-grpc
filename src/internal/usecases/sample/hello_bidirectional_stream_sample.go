@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	"go-grpc/internal/util/logger"
 	pb "go-grpc/pb/sample"
 
 	"google.golang.org/grpc"
@@ -26,6 +27,9 @@ func NewSampleHelloBidirectionalStreamUsecase() SampleHelloBidirectionalStreamUs
 }
 
 func (u *sampleHelloBidirectionalStreamUsecase) Exec(stream grpc.BidiStreamingServer[pb.HelloBidirectionalStreamRequestBody, pb.HelloBidirectionalStreamResponseBody]) error {
+	// コンテキストを取得
+	ctx := stream.Context()
+
 	for {
 		req, err := stream.Recv()
 		if errors.Is(err, io.EOF) {
@@ -37,6 +41,9 @@ func (u *sampleHelloBidirectionalStreamUsecase) Exec(stream grpc.BidiStreamingSe
 
 		// バリデーションチェック
 		if err := req.Validate(); err != nil {
+			msg := fmt.Sprintf("バリデーションエラー：%s", err.Error())
+			logger.Warn(ctx, msg)
+
 			return status.Errorf(codes.InvalidArgument, "%s", err.Error())
 		}
 
