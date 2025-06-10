@@ -68,15 +68,25 @@ func RequestUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.Un
 	// 処理を実行
 	res, err := handler(ctx, req)
 
-	// トレーラーに情報を追加
+	// ステータスコードを取得
+	st, ok := status.FromError(err)
+	if !ok {
+		return nil, fmt.Errorf("ステータスコードを取得できませんでした。")
+	}
+
+	// ctxにstatusとstatusCodeを設定
+	ctx = context.WithValue(ctx, utilCtx.Status, st.Code().String())
+	ctx = context.WithValue(ctx, utilCtx.StatusCode, fmt.Sprintf("%d", int(st.Code())))
+
+	// トレーラーに情報追加
 	if err != nil {
-		trailerMD := metadata.New(map[string]string{"status": "ERROR"})
-		if err := grpc.SetTrailer(ctx, trailerMD); err != nil {
+		tStatus := metadata.New(map[string]string{"status": fmt.Sprintf("ERROR ( %d %s )", int(st.Code()), st.Code().String())})
+		if err := grpc.SetTrailer(ctx, tStatus); err != nil {
 			return nil, err
 		}
 	} else {
-		trailerMD := metadata.New(map[string]string{"status": "OK"})
-		if err := grpc.SetTrailer(ctx, trailerMD); err != nil {
+		tStatus := metadata.New(map[string]string{"status": fmt.Sprintf("SUCCESS ( %d %s )", int(st.Code()), st.Code().String())})
+		if err := grpc.SetTrailer(ctx, tStatus); err != nil {
 			return nil, err
 		}
 	}
@@ -126,15 +136,25 @@ func RequestStreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.
 
 	err := handler(srv, &wrappedServerStream{ss, ctx})
 
-	// トレーラーに情報を追加
+	// ステータスコードを取得
+	st, ok := status.FromError(err)
+	if !ok {
+		return fmt.Errorf("ステータスコードを取得できませんでした。")
+	}
+
+	// ctxにstatusとstatusCodeを設定
+	ctx = context.WithValue(ctx, utilCtx.Status, st.Code().String())
+	ctx = context.WithValue(ctx, utilCtx.StatusCode, fmt.Sprintf("%d", int(st.Code())))
+
+	// トレーラーに情報追加
 	if err != nil {
-		trailerMD := metadata.New(map[string]string{"status": "ERROR"})
-		if err := grpc.SetTrailer(ctx, trailerMD); err != nil {
+		tStatus := metadata.New(map[string]string{"status": fmt.Sprintf("ERROR ( %d %s )", int(st.Code()), st.Code().String())})
+		if err := grpc.SetTrailer(ctx, tStatus); err != nil {
 			return err
 		}
 	} else {
-		trailerMD := metadata.New(map[string]string{"status": "OK"})
-		if err := grpc.SetTrailer(ctx, trailerMD); err != nil {
+		tStatus := metadata.New(map[string]string{"status": fmt.Sprintf("SUCCESS ( %d %s )", int(st.Code()), st.Code().String())})
+		if err := grpc.SetTrailer(ctx, tStatus); err != nil {
 			return err
 		}
 	}

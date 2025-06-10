@@ -91,5 +91,26 @@ docker compose exec grpc protoc -I=.:../pkg/mod/github.com/envoyproxy/protoc-gen
 ```
 docker compose exec grpc protoc -I=.:../pkg/mod/github.com/envoyproxy/protoc-gen-validate@v1.2.1  --doc_out=./doc --doc_opt=markdown,docs.md ./proto/sample/sample.proto
 ```  
-> ※対象の.protoファイルが複数ある場合、末尾にパスを追加して下さい。
+> ※対象の.protoファイルが複数ある場合、末尾にパスを追加して下さい。  
+  
+<br />
+  
+## 本番環境用のコンテナについて
+本番環境用コンテナをローカルでビルドして確認したい場合は、以下の手順で行って下さい。  
+  
+### 1. .env.productionの修正
+本番環境用の機密情報を含まない環境変数の設定には「.env.production」を使います。
+ローカルで確認する場合は必要に応じて内容を修正して下さい。  
+  
+### 2. コンテナのビルド
+以下のコマンドを実行し、コンテナをビルドします。  
+```
+docker build --no-cache -f ./docker/prod/Dockerfile -t go-grpc:latest .
+```  
+  
+### 3. コンテナの起動
+以下のコマンドを実行し、コンテナを起動します。  
+```
+docker run -d -p 80:8080 go-grpc:latest
+```  
   

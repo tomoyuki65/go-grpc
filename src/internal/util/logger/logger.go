@@ -28,6 +28,16 @@ func (h *SlogHandler) Handle(ctx context.Context, r slog.Record) error {
 		r.AddAttrs(slog.Attr{Key: "uid", Value: slog.String("uid", uid).Value})
 	}
 
+	status, ok := ctx.Value(utilCtx.Status).(string)
+	if ok {
+		r.AddAttrs(slog.Attr{Key: "status", Value: slog.String("status", status).Value})
+	}
+
+	statusCode, ok := ctx.Value(utilCtx.StatusCode).(string)
+	if ok {
+		r.AddAttrs(slog.Attr{Key: "statusCode", Value: slog.String("statusCode", statusCode).Value})
+	}
+
 	return h.Handler.Handle(ctx, r)
 }
 
