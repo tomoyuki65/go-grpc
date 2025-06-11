@@ -8,6 +8,8 @@ package sample
 
 import (
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -473,11 +475,57 @@ func (x *HelloBidirectionalStreamResponseBody) GetMessage() string {
 	return ""
 }
 
+// エラーレスポンス
+type ErrResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// メッセージ
+	Message       string `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ErrResponse) Reset() {
+	*x = ErrResponse{}
+	mi := &file_proto_sample_sample_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ErrResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ErrResponse) ProtoMessage() {}
+
+func (x *ErrResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_sample_sample_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ErrResponse.ProtoReflect.Descriptor instead.
+func (*ErrResponse) Descriptor() ([]byte, []int) {
+	return file_proto_sample_sample_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *ErrResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_proto_sample_sample_proto protoreflect.FileDescriptor
 
 const file_proto_sample_sample_proto_rawDesc = "" +
 	"\n" +
-	"\x19proto/sample/sample.proto\x12\x06sample\x1a\x17validate/validate.proto\"\a\n" +
+	"\x19proto/sample/sample.proto\x12\x06sample\x1a\x17validate/validate.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\a\n" +
 	"\x05Empty\"-\n" +
 	"\x11HelloResponseBody\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\"6\n" +
@@ -496,13 +544,41 @@ const file_proto_sample_sample_proto_rawDesc = "" +
 	"#HelloBidirectionalStreamRequestBody\x12\x1b\n" +
 	"\x04text\x18\x01 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\x04text\"@\n" +
 	"$HelloBidirectionalStreamResponseBody\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage2\xe2\x03\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\"'\n" +
+	"\vErrResponse\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2\xe2\b\n" +
 	"\rSampleService\x123\n" +
 	"\x05Hello\x12\r.sample.Empty\x1a\x19.sample.HelloResponseBody\"\x00\x12S\n" +
 	"\fHelloAddText\x12\x1f.sample.HelloAddTextRequestBody\x1a .sample.HelloAddTextResponseBody\"\x00\x12d\n" +
 	"\x11HelloServerStream\x12$.sample.HelloServerStreamRequestBody\x1a%.sample.HelloServerStreamResponseBody\"\x000\x01\x12d\n" +
 	"\x11HelloClientStream\x12$.sample.HelloClientStreamRequestBody\x1a%.sample.HelloClientStreamResponseBody\"\x00(\x01\x12{\n" +
-	"\x18HelloBidirectionalStream\x12+.sample.HelloBidirectionalStreamRequestBody\x1a,.sample.HelloBidirectionalStreamResponseBody\"\x00(\x010\x01B\vZ\tpb/sampleb\x06proto3"
+	"\x18HelloBidirectionalStream\x12+.sample.HelloBidirectionalStreamRequestBody\x1a,.sample.HelloBidirectionalStreamResponseBody\"\x00(\x010\x01\x12\xc2\x01\n" +
+	"\bHelloApi\x12\r.sample.Empty\x1a\x19.sample.HelloResponseBody\"\x8b\x01\x92AsJq\n" +
+	"\x03500\x12j\n" +
+	"\x15Internal Server Error\x12\x17\n" +
+	"\x15\x1a\x13.sample.ErrResponse\"8\n" +
+	"\x10application/json\x12${\"message\": \"Internal Server Error\"}\x82\xd3\xe4\x93\x02\x0f\x12\r/api/v1/hello\x12\xb8\x03\n" +
+	"\x0fHelloAddTextApi\x12\x1f.sample.HelloAddTextRequestBody\x1a .sample.HelloAddTextResponseBody\"\xe1\x02\x92A\xc5\x02J]\n" +
+	"\x03400\x12V\n" +
+	"\vBad Request\x12\x17\n" +
+	"\x15\x1a\x13.sample.ErrResponse\".\n" +
+	"\x10application/json\x12\x1a{\"message\": \"Bad Request\"}J_\n" +
+	"\x03401\x12X\n" +
+	"\fUnauthorized\x12\x17\n" +
+	"\x15\x1a\x13.sample.ErrResponse\"/\n" +
+	"\x10application/json\x12\x1b{\"message\": \"Unauthorized\"}Jq\n" +
+	"\x03500\x12j\n" +
+	"\x15Internal Server Error\x12\x17\n" +
+	"\x15\x1a\x13.sample.ErrResponse\"8\n" +
+	"\x10application/json\x12${\"message\": \"Internal Server Error\"}b\x10\n" +
+	"\x0e\n" +
+	"\n" +
+	"BearerAuth\x12\x00\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/api/v1/helloB\xc8\x01\x92A\xb9\x01\n" +
+	"\x032.0\x124\n" +
+	"\fgRPC-Gateway\x12\x1fgRPC-GatewayのOpenAPI仕様書2\x031.0\x1a\x0elocalhost:8080*\x01\x01Zi\n" +
+	"g\n" +
+	"\n" +
+	"BearerAuth\x12Y\b\x02\x12DEnter the token with the `Bearer ` prefix, e.g., `Bearer abcde12345`\x1a\rAuthorization \x02Z\tpb/sampleb\x06proto3"
 
 var (
 	file_proto_sample_sample_proto_rawDescOnce sync.Once
@@ -516,7 +592,7 @@ func file_proto_sample_sample_proto_rawDescGZIP() []byte {
 	return file_proto_sample_sample_proto_rawDescData
 }
 
-var file_proto_sample_sample_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_proto_sample_sample_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_proto_sample_sample_proto_goTypes = []any{
 	(*Empty)(nil),                                // 0: sample.Empty
 	(*HelloResponseBody)(nil),                    // 1: sample.HelloResponseBody
@@ -528,6 +604,7 @@ var file_proto_sample_sample_proto_goTypes = []any{
 	(*HelloClientStreamResponseBody)(nil),        // 7: sample.HelloClientStreamResponseBody
 	(*HelloBidirectionalStreamRequestBody)(nil),  // 8: sample.HelloBidirectionalStreamRequestBody
 	(*HelloBidirectionalStreamResponseBody)(nil), // 9: sample.HelloBidirectionalStreamResponseBody
+	(*ErrResponse)(nil),                          // 10: sample.ErrResponse
 }
 var file_proto_sample_sample_proto_depIdxs = []int32{
 	0, // 0: sample.SampleService.Hello:input_type -> sample.Empty
@@ -535,13 +612,17 @@ var file_proto_sample_sample_proto_depIdxs = []int32{
 	4, // 2: sample.SampleService.HelloServerStream:input_type -> sample.HelloServerStreamRequestBody
 	6, // 3: sample.SampleService.HelloClientStream:input_type -> sample.HelloClientStreamRequestBody
 	8, // 4: sample.SampleService.HelloBidirectionalStream:input_type -> sample.HelloBidirectionalStreamRequestBody
-	1, // 5: sample.SampleService.Hello:output_type -> sample.HelloResponseBody
-	3, // 6: sample.SampleService.HelloAddText:output_type -> sample.HelloAddTextResponseBody
-	5, // 7: sample.SampleService.HelloServerStream:output_type -> sample.HelloServerStreamResponseBody
-	7, // 8: sample.SampleService.HelloClientStream:output_type -> sample.HelloClientStreamResponseBody
-	9, // 9: sample.SampleService.HelloBidirectionalStream:output_type -> sample.HelloBidirectionalStreamResponseBody
-	5, // [5:10] is the sub-list for method output_type
-	0, // [0:5] is the sub-list for method input_type
+	0, // 5: sample.SampleService.HelloApi:input_type -> sample.Empty
+	2, // 6: sample.SampleService.HelloAddTextApi:input_type -> sample.HelloAddTextRequestBody
+	1, // 7: sample.SampleService.Hello:output_type -> sample.HelloResponseBody
+	3, // 8: sample.SampleService.HelloAddText:output_type -> sample.HelloAddTextResponseBody
+	5, // 9: sample.SampleService.HelloServerStream:output_type -> sample.HelloServerStreamResponseBody
+	7, // 10: sample.SampleService.HelloClientStream:output_type -> sample.HelloClientStreamResponseBody
+	9, // 11: sample.SampleService.HelloBidirectionalStream:output_type -> sample.HelloBidirectionalStreamResponseBody
+	1, // 12: sample.SampleService.HelloApi:output_type -> sample.HelloResponseBody
+	3, // 13: sample.SampleService.HelloAddTextApi:output_type -> sample.HelloAddTextResponseBody
+	7, // [7:14] is the sub-list for method output_type
+	0, // [0:7] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -558,7 +639,7 @@ func file_proto_sample_sample_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_sample_sample_proto_rawDesc), len(file_proto_sample_sample_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

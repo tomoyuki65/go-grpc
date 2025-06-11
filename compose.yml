@@ -8,9 +8,13 @@ services:
     volumes:
       - ./src:/go/src
     ports:
+      # gRPC Server用のポート設定
+      - "50051:50051"
+      # gRPC Gateway用のポート設定
       - "8080:8080"
     environment:
       - ENV
-      - PORT
+      - GRPC_PORT
+      - GATEWAY_PORT
     tty: true
     stdin_open: true

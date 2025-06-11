@@ -1,0 +1,236 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "gRPC-Gateway",
+    "description": "gRPC-GatewayのOpenAPI仕様書",
+    "version": "1.0"
+  },
+  "tags": [
+    {
+      "name": "SampleService"
+    }
+  ],
+  "host": "localhost:8080",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/hello": {
+      "get": {
+        "summary": "gRPC-Gateway（GETメソッド）",
+        "operationId": "SampleService_HelloApi",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sampleHelloResponseBody"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/sampleErrResponse"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Internal Server Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "SampleService"
+        ]
+      },
+      "post": {
+        "summary": "gRPC-Gateway（POSTメソッド）",
+        "operationId": "SampleService_HelloAddTextApi",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sampleHelloAddTextResponseBody"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/sampleErrResponse"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Bad Request"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/sampleErrResponse"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Unauthorized"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/sampleErrResponse"
+            },
+            "examples": {
+              "application/json": {
+                "message": "Internal Server Error"
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sampleHelloAddTextRequestBody"
+            }
+          }
+        ],
+        "tags": [
+          "SampleService"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "sampleErrResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "メッセージ"
+        }
+      },
+      "title": "エラーレスポンス"
+    },
+    "sampleHelloAddTextRequestBody": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "テキスト"
+        }
+      },
+      "title": "HelloAddTextメソッドのリクエストパラメータ"
+    },
+    "sampleHelloAddTextResponseBody": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "メッセージ"
+        }
+      },
+      "title": "HelloAddTextメソッドのレスポンス結果"
+    },
+    "sampleHelloBidirectionalStreamResponseBody": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "メッセージ"
+        }
+      },
+      "title": "HelloBidirectionalStreamメソッドのレスポンス結果"
+    },
+    "sampleHelloClientStreamResponseBody": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "メッセージ"
+        }
+      },
+      "title": "HelloClientStreamメソッドのレスポンス結果"
+    },
+    "sampleHelloResponseBody": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "メッセージ"
+        }
+      },
+      "title": "Helloメソッドのレスポンス結果"
+    },
+    "sampleHelloServerStreamResponseBody": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "title": "メッセージ"
+        }
+      },
+      "title": "HelloServerStreamメソッドのレスポンス結果"
+    }
+  },
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "description": "Enter the token with the `Bearer ` prefix, e.g., `Bearer abcde12345`",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

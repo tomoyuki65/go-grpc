@@ -34,4 +34,9 @@ RUN go install github.com/air-verse/air@latest
 RUN go install go.uber.org/mock/mockgen@latest
 RUN go install honnef.co/go/tools/cmd/staticcheck@latest
 
+# gRPC-Gateway用のライブラリをインストール
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.26
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.26
+RUN go get github.com/googleapis/googleapis@v0.0.0-20250610203048-111b73837522
+
 EXPOSE 8080

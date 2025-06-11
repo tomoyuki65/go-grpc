@@ -5,6 +5,7 @@
 
 - [proto/sample/sample.proto](#proto_sample_sample-proto)
     - [Empty](#sample-Empty)
+    - [ErrResponse](#sample-ErrResponse)
     - [HelloAddTextRequestBody](#sample-HelloAddTextRequestBody)
     - [HelloAddTextResponseBody](#sample-HelloAddTextResponseBody)
     - [HelloBidirectionalStreamRequestBody](#sample-HelloBidirectionalStreamRequestBody)
@@ -32,6 +33,21 @@
 
 ### Empty
 空のリクエストパラメータ
+
+
+
+
+
+
+<a name="sample-ErrResponse"></a>
+
+### ErrResponse
+エラーレスポンス
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| message | [string](#string) |  | メッセージ |
 
 
 
@@ -191,6 +207,8 @@ HelloServerStreamメソッドのレスポンス結果
 | HelloServerStream | [HelloServerStreamRequestBody](#sample-HelloServerStreamRequestBody) | [HelloServerStreamResponseBody](#sample-HelloServerStreamResponseBody) stream | サーバーストリーミング（1リクエスト-複数のレスポンス） |
 | HelloClientStream | [HelloClientStreamRequestBody](#sample-HelloClientStreamRequestBody) stream | [HelloClientStreamResponseBody](#sample-HelloClientStreamResponseBody) | クライアントストリーミング（複数のリクエスト-1レスポンス） |
 | HelloBidirectionalStream | [HelloBidirectionalStreamRequestBody](#sample-HelloBidirectionalStreamRequestBody) stream | [HelloBidirectionalStreamResponseBody](#sample-HelloBidirectionalStreamResponseBody) stream | 双方向ストリーミング（複数のリクエスト-複数のレスポンス） |
+| HelloApi | [Empty](#sample-Empty) | [HelloResponseBody](#sample-HelloResponseBody) | gRPC-Gateway（GETメソッド） |
+| HelloAddTextApi | [HelloAddTextRequestBody](#sample-HelloAddTextRequestBody) | [HelloAddTextResponseBody](#sample-HelloAddTextResponseBody) | gRPC-Gateway（POSTメソッド） |
 
  
 

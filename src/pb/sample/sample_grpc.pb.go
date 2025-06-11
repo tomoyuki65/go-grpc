@@ -24,6 +24,8 @@ const (
 	SampleService_HelloServerStream_FullMethodName        = "/sample.SampleService/HelloServerStream"
 	SampleService_HelloClientStream_FullMethodName        = "/sample.SampleService/HelloClientStream"
 	SampleService_HelloBidirectionalStream_FullMethodName = "/sample.SampleService/HelloBidirectionalStream"
+	SampleService_HelloApi_FullMethodName                 = "/sample.SampleService/HelloApi"
+	SampleService_HelloAddTextApi_FullMethodName          = "/sample.SampleService/HelloAddTextApi"
 )
 
 // SampleServiceClient is the client API for SampleService service.
@@ -42,6 +44,10 @@ type SampleServiceClient interface {
 	HelloClientStream(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[HelloClientStreamRequestBody, HelloClientStreamResponseBody], error)
 	// 双方向ストリーミング（複数のリクエスト-複数のレスポンス）
 	HelloBidirectionalStream(ctx context.Context, opts ...grpc.CallOption) (grpc.BidiStreamingClient[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody], error)
+	// gRPC-Gateway（GETメソッド）
+	HelloApi(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HelloResponseBody, error)
+	// gRPC-Gateway（POSTメソッド）
+	HelloAddTextApi(ctx context.Context, in *HelloAddTextRequestBody, opts ...grpc.CallOption) (*HelloAddTextResponseBody, error)
 }
 
 type sampleServiceClient struct {
@@ -117,6 +123,26 @@ func (c *sampleServiceClient) HelloBidirectionalStream(ctx context.Context, opts
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SampleService_HelloBidirectionalStreamClient = grpc.BidiStreamingClient[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]
 
+func (c *sampleServiceClient) HelloApi(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*HelloResponseBody, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(HelloResponseBody)
+	err := c.cc.Invoke(ctx, SampleService_HelloApi_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sampleServiceClient) HelloAddTextApi(ctx context.Context, in *HelloAddTextRequestBody, opts ...grpc.CallOption) (*HelloAddTextResponseBody, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(HelloAddTextResponseBody)
+	err := c.cc.Invoke(ctx, SampleService_HelloAddTextApi_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SampleServiceServer is the server API for SampleService service.
 // All implementations must embed UnimplementedSampleServiceServer
 // for forward compatibility.
@@ -133,6 +159,10 @@ type SampleServiceServer interface {
 	HelloClientStream(grpc.ClientStreamingServer[HelloClientStreamRequestBody, HelloClientStreamResponseBody]) error
 	// 双方向ストリーミング（複数のリクエスト-複数のレスポンス）
 	HelloBidirectionalStream(grpc.BidiStreamingServer[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]) error
+	// gRPC-Gateway（GETメソッド）
+	HelloApi(context.Context, *Empty) (*HelloResponseBody, error)
+	// gRPC-Gateway（POSTメソッド）
+	HelloAddTextApi(context.Context, *HelloAddTextRequestBody) (*HelloAddTextResponseBody, error)
 	mustEmbedUnimplementedSampleServiceServer()
 }
 
@@ -157,6 +187,12 @@ func (UnimplementedSampleServiceServer) HelloClientStream(grpc.ClientStreamingSe
 }
 func (UnimplementedSampleServiceServer) HelloBidirectionalStream(grpc.BidiStreamingServer[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]) error {
 	return status.Errorf(codes.Unimplemented, "method HelloBidirectionalStream not implemented")
+}
+func (UnimplementedSampleServiceServer) HelloApi(context.Context, *Empty) (*HelloResponseBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HelloApi not implemented")
+}
+func (UnimplementedSampleServiceServer) HelloAddTextApi(context.Context, *HelloAddTextRequestBody) (*HelloAddTextResponseBody, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HelloAddTextApi not implemented")
 }
 func (UnimplementedSampleServiceServer) mustEmbedUnimplementedSampleServiceServer() {}
 func (UnimplementedSampleServiceServer) testEmbeddedByValue()                       {}
@@ -240,6 +276,42 @@ func _SampleService_HelloBidirectionalStream_Handler(srv interface{}, stream grp
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SampleService_HelloBidirectionalStreamServer = grpc.BidiStreamingServer[HelloBidirectionalStreamRequestBody, HelloBidirectionalStreamResponseBody]
 
+func _SampleService_HelloApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SampleServiceServer).HelloApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SampleService_HelloApi_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SampleServiceServer).HelloApi(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SampleService_HelloAddTextApi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HelloAddTextRequestBody)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SampleServiceServer).HelloAddTextApi(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SampleService_HelloAddTextApi_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SampleServiceServer).HelloAddTextApi(ctx, req.(*HelloAddTextRequestBody))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SampleService_ServiceDesc is the grpc.ServiceDesc for SampleService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -254,6 +326,14 @@ var SampleService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "HelloAddText",
 			Handler:    _SampleService_HelloAddText_Handler,
+		},
+		{
+			MethodName: "HelloApi",
+			Handler:    _SampleService_HelloApi_Handler,
+		},
+		{
+			MethodName: "HelloAddTextApi",
+			Handler:    _SampleService_HelloAddTextApi_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

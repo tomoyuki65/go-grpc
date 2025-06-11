@@ -83,15 +83,19 @@ docker compose exec grpc go tool cover -html=internal/usecases/coverage.out -o=i
   
 ### 1. pb（Protocol Buffers）ファイルを生成
 ```
-docker compose exec grpc protoc -I=.:../pkg/mod/github.com/envoyproxy/protoc-gen-validate@v1.2.1 --go_out=. --go-grpc_out=. --validate_out=lang=go:. ./proto/sample/sample.proto
+docker compose exec grpc protoc -I=.:../pkg/mod/github.com/envoyproxy/protoc-gen-validate@v1.2.1:../pkg/mod/github.com/googleapis/googleapis@v0.0.0-20250610203048-111b73837522:../pkg/mod/github.com/grpc-ecosystem/grpc-gateway/v2@v2.26.3 --go_out=. --go-grpc_out=. --validate_out=lang=go:. ./proto/sample/sample.proto
 ```  
-> ※ファイルの出力先は.protoファイル内の「option go_package="pb/sample";」の部分で指定
+> ※ファイルの出力先は.protoファイル内の「option go_package="pb/sample";」の部分で指定 
+  
+> ※オプション「-I」でライブラリのパス（コンテナ内のパス）を指定  
   
 ### 2. ドキュメントファイルを生成
 ```
-docker compose exec grpc protoc -I=.:../pkg/mod/github.com/envoyproxy/protoc-gen-validate@v1.2.1  --doc_out=./doc --doc_opt=markdown,docs.md ./proto/sample/sample.proto
+docker compose run --rm grpc protoc -I=.:../pkg/mod/github.com/envoyproxy/protoc-gen-validate@v1.2.1:../pkg/mod/github.com/googleapis/googleapis@v0.0.0-20250610203048-111b73837522:../pkg/mod/github.com/grpc-ecosystem/grpc-gateway/v2@v2.26.3 --doc_out=./doc --doc_opt=markdown,docs.md --openapiv2_out=allow_merge=true,merge_file_name=./openapi:./doc ./proto/sample/sample.proto
 ```  
 > ※対象の.protoファイルが複数ある場合、末尾にパスを追加して下さい。  
+  
+> ※gRPC-Gateway用のOpenAPI仕様書として「openapi.swagger.json」も出力されます。  
   
 <br />
   
@@ -111,6 +115,6 @@ docker build --no-cache -f ./docker/prod/Dockerfile -t go-grpc:latest .
 ### 3. コンテナの起動
 以下のコマンドを実行し、コンテナを起動します。  
 ```
-docker run -d -p 80:8080 go-grpc:latest
+docker run -d -p 80:8080 -p 50051:50051 go-grpc:latest
 ```  
   

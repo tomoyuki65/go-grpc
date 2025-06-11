@@ -63,7 +63,7 @@ func RequestUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.Un
 	}
 
 	// リクエスト開始のログ出力
-	logger.Info(ctx, "start request")
+	logger.Info(ctx, "start gRPC-Server request")
 
 	// 処理を実行
 	res, err := handler(ctx, req)
@@ -92,7 +92,7 @@ func RequestUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.Un
 	}
 
 	// リクエスト終了のログ出力
-	logger.Info(ctx, "finish request")
+	logger.Info(ctx, "finish gRPC-Server request")
 
 	return res, err
 }
@@ -132,7 +132,7 @@ func RequestStreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.
 	}
 
 	// リクエスト開始のログ出力
-	logger.Info(ctx, "start stream request")
+	logger.Info(ctx, "start gRPC-Server stream request")
 
 	err := handler(srv, &wrappedServerStream{ss, ctx})
 
@@ -160,7 +160,7 @@ func RequestStreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.
 	}
 
 	// リクエスト終了のログ出力
-	logger.Info(ctx, "finish stream request")
+	logger.Info(ctx, "finish gRPC-Server stream request")
 
 	return err
 }
@@ -182,14 +182,17 @@ func AuthUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.Unary
 	// authorizationからトークンを取得
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
+		logger.Error(ctx, "メタデータを取得できません。")
 		return nil, fmt.Errorf("メタデータを取得できません。")
 	}
 	authHeader, ok := md["authorization"]
 	if !ok {
+		logger.Warn(ctx, "認証用トークンが設定されていません。")
 		return nil, status.Errorf(codes.InvalidArgument, "%s", "認証用トークンが設定されていません。")
 	}
 	token := strings.TrimPrefix(authHeader[0], "Bearer ")
 	if token == "" {
+		logger.Warn(ctx, "認証用トークンが設定されていません。")
 		return nil, status.Errorf(codes.InvalidArgument, "%s", "認証用トークンが設定されていません。")
 	}
 
@@ -217,14 +220,17 @@ func AuthStreamInterceptor(srv interface{}, ss grpc.ServerStream, info *grpc.Str
 	ctx := ss.Context()
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
+		logger.Error(ctx, "メタデータを取得できません。")
 		return fmt.Errorf("メタデータを取得できません。")
 	}
 	authHeader, ok := md["authorization"]
 	if !ok {
+		logger.Warn(ctx, "認証用トークンが設定されていません。")
 		return status.Errorf(codes.InvalidArgument, "%s", "認証用トークンが設定されていません。")
 	}
 	token := strings.TrimPrefix(authHeader[0], "Bearer ")
 	if token == "" {
+		logger.Warn(ctx, "認証用トークンが設定されていません。")
 		return status.Errorf(codes.InvalidArgument, "%s", "認証用トークンが設定されていません。")
 	}
 

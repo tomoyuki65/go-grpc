@@ -57,6 +57,8 @@
 				
 				<option value="file0">go-grpc/internal/servers/grpc/sample/sample.go (100.0%)</option>
 				
+				<option value="file1">go-grpc/internal/servers/gw/sample/sample.go (100.0%)</option>
+				
 				</select>
 			</div>
 			<div id="legend">
@@ -133,6 +135,46 @@ func (s *sample) HelloBidirectionalStream(stream grpc.BidiStreamingServer[pb.Hel
 
         // ユースケースの実行
         return sampleUsecase.Exec(stream)
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package sample
+
+import (
+        "context"
+
+        repositorySample "go-grpc/internal/repositories/sample"
+        serviceSample "go-grpc/internal/services/sample"
+        usecaseSample "go-grpc/internal/usecases/sample"
+        pb "go-grpc/pb/sample"
+)
+
+type sampleApi struct {
+        pb.UnimplementedSampleServiceServer
+}
+
+func NewSampleApi() *sampleApi <span class="cov8" title="1">{
+        return &amp;sampleApi{}
+}</span>
+
+// gRPC-Gateway（GETメソッド）
+func (s *sampleApi) HelloApi(ctx context.Context, in *pb.Empty) (*pb.HelloResponseBody, error) <span class="cov8" title="1">{
+        // インスタンス生成
+        sampleRepository := repositorySample.NewSampleRepository()
+        sampleService := serviceSample.NewSampleService(sampleRepository)
+        sampleUsecase := usecaseSample.NewSampleHelloUsecase(sampleService)
+
+        // ユースケースを実行
+        return sampleUsecase.Exec(ctx, in)
+}</span>
+
+// gRPC-Gateway（POSTメソッド）
+func (s *sampleApi) HelloAddTextApi(ctx context.Context, in *pb.HelloAddTextRequestBody) (*pb.HelloAddTextResponseBody, error) <span class="cov8" title="1">{
+        // インスタンス生成
+        sampleUsecase := usecaseSample.NewSampleHelloAddTextUsecase()
+
+        // ユースケースの実行
+        return sampleUsecase.Exec(ctx, in)
 }</span>
 </pre>
 		

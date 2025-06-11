@@ -1,10 +1,34 @@
 syntax = "proto3";
 
 import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 package sample;
 
 option go_package="pb/sample";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  swagger: "2.0"
+  info: {
+    title: "gRPC-Gateway"
+    description: "gRPC-GatewayのOpenAPI仕様書"
+    version: "1.0"
+  }
+  host: "localhost:8080"
+  schemes: HTTP
+  security_definitions: {
+    security: {
+      key: "BearerAuth"
+      value: {
+        type: TYPE_API_KEY
+        in: IN_HEADER
+        name: "Authorization"
+        description: "Enter the token with the `Bearer ` prefix, e.g., `Bearer abcde12345`"
+      }
+    }
+  }
+};
 
 // 空のリクエストパラメータ
 message Empty {}
@@ -63,6 +87,12 @@ message HelloBidirectionalStreamResponseBody {
   string message = 1;
 }
 
+// エラーレスポンス
+message ErrResponse {
+  // メッセージ
+  string message = 1;
+}
+
 // サンプルサービス
 service SampleService {
   // 「Hello World !!」を出力
@@ -98,4 +128,89 @@ service SampleService {
     //   - 0 OK: HelloClientStreamResponseBodyを出力
     //   - 2 Unknown: 不明なエラー
     //   - 3 INVALID_ARGUMENT: バリデーションエラー）
+
+  // gRPC-Gateway（GETメソッド）
+  rpc HelloApi(Empty) returns (HelloResponseBody){
+    option (google.api.http) = {
+      get: "/api/v1/hello"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "500"
+        value: {
+          description: "Internal Server Error"
+          schema: {
+            json_schema: {
+              ref: ".sample.ErrResponse"
+            }
+          }
+          examples: {
+            key: "application/json"
+            value: "{\"message\": \"Internal Server Error\"}"
+          }
+        }
+      }
+    };
+  }
+
+  // gRPC-Gateway（POSTメソッド）
+  rpc HelloAddTextApi(HelloAddTextRequestBody) returns (HelloAddTextResponseBody){
+    option (google.api.http) = {
+      post: "/api/v1/hello"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      responses: {
+        key: "400"
+        value: {
+          description: "Bad Request"
+          schema: {
+            json_schema: {
+              ref: ".sample.ErrResponse"
+            }
+          }
+          examples: {
+            key: "application/json"
+            value: "{\"message\": \"Bad Request\"}"
+          }
+        }
+      }
+      responses: {
+        key: "401"
+        value: {
+          description: "Unauthorized"
+          schema: {
+            json_schema: {
+              ref: ".sample.ErrResponse"
+            }
+          }
+          examples: {
+            key: "application/json"
+            value: "{\"message\": \"Unauthorized\"}"
+          }
+        }
+      }
+      responses: {
+        key: "500"
+        value: {
+          description: "Internal Server Error"
+          schema: {
+            json_schema: {
+              ref: ".sample.ErrResponse"
+            }
+          }
+          examples: {
+            key: "application/json"
+            value: "{\"message\": \"Internal Server Error\"}"
+          }
+        }
+      }
+      security: {
+        security_requirement: {
+          key: "BearerAuth"
+          value: {}
+        }
+      }
+    };
+  }
 }

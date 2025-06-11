@@ -3,7 +3,9 @@ package sample
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
+	"os"
 	"strconv"
 	"testing"
 
@@ -121,7 +123,12 @@ func TestExcludeFromCoverage(t *testing.T) {
 
 func TestSampleHello(t *testing.T) {
 	// gRPCクライアントの設定
-	conn, err := grpc.NewClient("dns:///localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort == "" {
+		grpcPort = "50051"
+	}
+	target := fmt.Sprintf("dns:///localhost:%s", grpcPort)
+	conn, err := grpc.NewClient(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("Failed to connect: %v", err)
 	}
@@ -140,7 +147,12 @@ func TestSampleHello(t *testing.T) {
 
 func TestSampleHelloAddText(t *testing.T) {
 	// gRPCクライアントの設定
-	conn, err := grpc.NewClient("dns:///localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort == "" {
+		grpcPort = "50051"
+	}
+	target := fmt.Sprintf("dns:///localhost:%s", grpcPort)
+	conn, err := grpc.NewClient(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("Failed to connect: %v", err)
 	}
@@ -164,7 +176,12 @@ func TestSampleHelloAddText(t *testing.T) {
 
 func TestSampleHelloServerStream(t *testing.T) {
 	// gRPCクライアントの設定
-	conn, err := grpc.NewClient("dns:///localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort == "" {
+		grpcPort = "50051"
+	}
+	target := fmt.Sprintf("dns:///localhost:%s", grpcPort)
+	conn, err := grpc.NewClient(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("Failed to connect: %v", err)
 	}
@@ -199,7 +216,12 @@ func TestSampleHelloServerStream(t *testing.T) {
 
 func TestSampleHelloClientStream(t *testing.T) {
 	// gRPCクライアントの設定
-	conn, err := grpc.NewClient("dns:///localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort == "" {
+		grpcPort = "50051"
+	}
+	target := fmt.Sprintf("dns:///localhost:%s", grpcPort)
+	conn, err := grpc.NewClient(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("Failed to connect: %v", err)
 	}
@@ -234,7 +256,12 @@ func TestSampleHelloClientStream(t *testing.T) {
 
 func TestSampleHelloBidirectionalStream(t *testing.T) {
 	// gRPCクライアントの設定
-	conn, err := grpc.NewClient("dns:///localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort == "" {
+		grpcPort = "50051"
+	}
+	target := fmt.Sprintf("dns:///localhost:%s", grpcPort)
+	conn, err := grpc.NewClient(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		t.Fatalf("Failed to connect: %v", err)
 	}
