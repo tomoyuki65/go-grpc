@@ -19,6 +19,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
+	"github.com/rs/cors"
 )
 
 // gRPC-Gatewayのサーバー起動用の関数
@@ -37,8 +38,17 @@ func grpcGateway(grpcPort, gatewayPort string) error {
 		return err
 	}
 
+	// CORSの設定
+	corsHandler := cors.New(cors.Options{
+        AllowedOrigins:   []string{"http://localhost:3000"},
+        AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+        AllowedHeaders:   []string{"Authorization", "Content-Type"},
+        AllowCredentials: true,
+        MaxAge:           300,
+	})
+
 	// ミドルウェアの設定（muxをラップ）
-	handler := mw.RequestMiddleware(mw.AuthMiddleware(mux))
+	handler := mw.RequestMiddleware(mw.AuthMiddleware(corsHandler.Handler(mux)))
 
 	// HTTPサーバーの起動
 	listener := fmt.Sprintf(":%s", gatewayPort)
