@@ -16,10 +16,10 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
-	"github.com/rs/cors"
 )
 
 // gRPC-Gatewayのサーバー起動用の関数
@@ -40,11 +40,11 @@ func grpcGateway(grpcPort, gatewayPort string) error {
 
 	// CORSの設定
 	corsHandler := cors.New(cors.Options{
-        AllowedOrigins:   []string{"http://localhost:3000"},
-        AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-        AllowedHeaders:   []string{"Authorization", "Content-Type"},
-        AllowCredentials: true,
-        MaxAge:           300,
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+		MaxAge:           300,
 	})
 
 	// ミドルウェアの設定（muxをラップ）
@@ -75,9 +75,9 @@ func main() {
 	}
 
 	// gRPC-Gateway用のポート番号の設定
-	gatewayPort  := os.Getenv("GATEWAY_PORT")
-	if gatewayPort  == "" {
-		gatewayPort  = "8080"
+	gatewayPort := os.Getenv("GATEWAY_PORT")
+	if gatewayPort == "" {
+		gatewayPort = "8080"
 	}
 
 	// Listenerの設定
