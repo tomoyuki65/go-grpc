@@ -83,7 +83,7 @@ docker compose exec grpc go tool cover -html=internal/usecases/coverage.out -o=i
   
 ### 1. pb（Protocol Buffers）ファイルを生成
 ```
-docker compose exec grpc protoc -I=.:../pkg/mod/github.com/envoyproxy/protoc-gen-validate@v1.2.1:../pkg/mod/github.com/googleapis/googleapis@v0.0.0-20250610203048-111b73837522:../pkg/mod/github.com/grpc-ecosystem/grpc-gateway/v2@v2.26.3 --go_out=. --go-grpc_out=. --validate_out=lang=go:. ./proto/sample/sample.proto
+docker compose exec grpc protoc -I=.:../pkg/mod/github.com/envoyproxy/protoc-gen-validate@v1.2.1:../pkg/mod/github.com/googleapis/googleapis@v0.0.0-20250610203048-111b73837522:../pkg/mod/github.com/grpc-ecosystem/grpc-gateway/v2@v2.26.3 --go_out=. --go-grpc_out=. --validate_out=lang=go:. --grpc-gateway_out=. ./proto/sample/sample.proto
 ```  
 > ※ファイルの出力先は.protoファイル内の「option go_package="pb/sample";」の部分で指定 
   
@@ -117,4 +117,9 @@ docker build --no-cache -f ./docker/prod/Dockerfile -t go-grpc:latest .
 ```
 docker run -d -p 80:8080 -p 50051:50051 go-grpc:latest
 ```  
+  
+<br />
+  
+## 参考記事  
+[・Go言語（Golang）のgRPCでバックエンドAPIを開発する方法まとめ](https://golang.tomoyuki65.com/how-to-develop-api-with-grpc-in-golang)  
   
