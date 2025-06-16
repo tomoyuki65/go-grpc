@@ -97,6 +97,19 @@ docker compose run --rm grpc protoc -I=.:../pkg/mod/github.com/envoyproxy/protoc
   
 > ※gRPC-Gateway用のOpenAPI仕様書として「openapi.swagger.json」も出力されます。  
   
+### 3. Bufでファイルを生成
+Buf CLIを使ってファイルを生成する場合、以下のコマンドを利用して下さい。  
+  
+・buf.yamlから依存関係のインストール（buf.lockを生成）  
+```
+docker compose exec grpc buf dep update
+```  
+  
+・buf.gen.yamlからpbファイルを生成
+```
+docker compose exec grpc buf generate
+```  
+  
 <br />
   
 ## 本番環境用のコンテナについて

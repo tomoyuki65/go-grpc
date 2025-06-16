@@ -3,7 +3,7 @@
 
 ## Table of Contents
 
-- [proto/sample/sample.proto](#proto_sample_sample-proto)
+- [sample/sample.proto](#sample_sample-proto)
     - [Empty](#sample-Empty)
     - [ErrResponse](#sample-ErrResponse)
     - [HelloAddTextRequestBody](#sample-HelloAddTextRequestBody)
@@ -22,10 +22,10 @@
 
 
 
-<a name="proto_sample_sample-proto"></a>
+<a name="sample_sample-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## proto/sample/sample.proto
+## sample/sample.proto
 
 
 

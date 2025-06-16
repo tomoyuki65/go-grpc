@@ -39,4 +39,7 @@ RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway
 RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.26
 RUN go get github.com/googleapis/googleapis@v0.0.0-20250610203048-111b73837522
 
+# Buf CLIをインストール
+RUN go install github.com/bufbuild/buf/cmd/buf@latest
+
 EXPOSE 8080
